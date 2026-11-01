@@ -1,0 +1,216 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("STAFF") // ADMIN, MANAGER, STAFF
+  phone     String?
+  status    String   @default("ACTIVE") // ACTIVE, INACTIVE
+  sales     Sale[]
+  expenses  Expense[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id            Int            @id @default(autoincrement())
+  name          String
+  sku           String         @unique
+  barcode       String?        @unique
+  categoryId    Int
+  category      Category       @relation(fields: [categoryId], references: [id])
+  purchasePrice Float
+  sellingPrice  Float
+  stockQuantity Int            @default(0)
+  reorderLevel  Int            @default(10)
+  unit          String         @default("pcs") // pcs, kg, litre, box
+  isArchived    Boolean        @default(false)
+  saleItems     SaleItem[]
+  purchaseItems PurchaseItem[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([categoryId])
+  @@index([name])
+  @@index([sku])
+  @@index([isArchived])
+}
+
+model Customer {
+  id                 Int      @id @default(autoincrement())
+  name               String
+  phone              String?  @unique
+  email              String?
+  address            String?
+  loyaltyPoints      Int      @default(0)
+  outstandingBalance Float    @default(0.0)
+  sales              Sale[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([name])
+  @@index([phone])
+}
+
+model Supplier {
+  id            Int        @id @default(autoincrement())
+  name          String
+  contactPerson String?
+  phone         String?
+  email         String?
+  address       String?
+  gstNumber     String?
+  balanceDue    Float      @default(0.0)
+  purchases     Purchase[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([name])
+}
+
+model Sale {
+  id             Int        @id @default(autoincrement())
+  invoiceNumber  String     @unique
+  customerId     Int?
+  customer       Customer?  @relation(fields: [customerId], references: [id])
+  subtotal       Float
+  taxPercent     Float      @default(0.0)
+  taxAmount      Float      @default(0.0)
+  discount       Float      @default(0.0)
+  grandTotal     Float
+  paidAmount     Float
+  balanceAmount  Float      @default(0.0)
+  paymentMode    String     @default("CASH") // CASH, UPI, CARD, CREDIT
+  paymentStatus  String     @default("PAID") // PAID, PARTIAL, DUE
+  notes          String?
+  createdByUserId Int?
+  createdByUser  User?      @relation(fields: [createdByUserId], references: [id])
+  items          SaleItem[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([invoiceNumber])
+  @@index([customerId])
+  @@index([createdAt])
+}
+
+model SaleItem {
+  id        Int      @id @default(autoincrement())
+  saleId    Int
+  sale      Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int
+  unitPrice Float
+  total     Float
+  createdAt DateTime @default(now())
+
+  @@index([saleId])
+  @@index([productId])
+}
+
+model Purchase {
+  id             Int            @id @default(autoincrement())
+  purchaseNumber String         @unique
+  supplierId     Int
+  supplier       Supplier       @relation(fields: [supplierId], references: [id])
+  subtotal       Float
+  taxAmount      Float          @default(0.0)
+  grandTotal     Float
+  paidAmount     Float
+  balanceAmount  Float          @default(0.0)
+  paymentStatus  String         @default("PAID") // PAID, PARTIAL, DUE
+  notes          String?
+  items          PurchaseItem[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([purchaseNumber])
+  @@index([supplierId])
+  @@index([createdAt])
+}
+
+model PurchaseItem {
+  id         Int      @id @default(autoincrement())
+  purchaseId Int
+  purchase   Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id])
+  quantity   Int
+  unitPrice  Float
+  total      Float
+  createdAt  DateTime @default(now())
+
+  @@index([purchaseId])
+  @@index([productId])
+}
+
+model Expense {
+  id              Int      @id @default(autoincrement())
+  title           String
+  category        String   // RENT, UTILITIES, SALARY, MAINTENANCE, SUPPLIES, MARKETING, OTHER
+  amount          Float
+  date            DateTime @default(now())
+  paymentMode     String   @default("CASH") // CASH, UPI, CARD, BANK_TRANSFER
+  notes           String?
+  recordedByUserId Int?
+  recordedByUser  User?    @relation(fields: [recordedByUserId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([category])
+  @@index([date])
+}
+
+model Employee {
+  id          Int          @id @default(autoincrement())
+  name        String
+  email       String?      @unique
+  phone       String
+  designation String
+  department  String       @default("Operations")
+  baseSalary  Float
+  joiningDate DateTime     @default(now())
+  status      String       @default("ACTIVE") // ACTIVE, INACTIVE, ON_LEAVE
+  attendances Attendance[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([name])
+  @@index([department])
+}
+
+model Attendance {
+  id         Int      @id @default(autoincrement())
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date       DateTime
+  status     String   @default("PRESENT") // PRESENT, ABSENT, LEAVE, HALF_DAY
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([employeeId, date])
+  @@index([employeeId])
+  @@index([date])
+}

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 64" fill="none">
+  <defs>
+    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="50%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="pulse-text-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="60%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <filter id="logo-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#4f46e5" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Emblem Icon (0 to 64) -->
+  <g transform="translate(2, 2)">
+    <rect x="2" y="2" width="56" height="56" rx="16" fill="url(#logo-grad)" filter="url(#logo-shadow)"/>
+    <rect x="2.75" y="2.75" width="54.5" height="54.5" rx="15.25" stroke="white" stroke-opacity="0.25" stroke-width="1.5" />
+    <path d="M17 43V17" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <path d="M17 17L25 32L30 21L35 38L43 17" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M43 17V43" stroke="white" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="30" cy="21" r="3" fill="#38bdf8" stroke="white" stroke-width="1.5"/>
+  </g>
+
+  <!-- Wordmark Text -->
+  <g transform="translate(74, 14)">
+    <!-- Nex -->
+    <text x="0" y="28" font-family="'Inter', -apple-system, sans-serif" font-size="30" font-weight="900" fill="#0f172a" letter-spacing="-0.5">Nex<tspan fill="url(#pulse-text-grad)">Pulse</tspan></text>
+    <!-- Tagline / Subtitle Badge -->
+    <text x="1" y="44" font-family="'Inter', -apple-system, sans-serif" font-size="9" font-weight="700" fill="#64748b" letter-spacing="2.2">BUSINESS OS</text>
+  </g>
+</svg>

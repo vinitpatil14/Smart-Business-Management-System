@@ -1,0 +1,31 @@
+{
+  "name": "smart-business-management-system",
+  "version": "1.0.0",
+  "description": "Smart Business Management System (SBMS) for small and medium businesses",
+  "scripts": {
+    "server:install": "cd server && npm install",
+    "client:install": "cd client && npm install",
+    "install:all": "npm run server:install && npm run client:install",
+    "setup:db": "cd server && npx prisma generate && npx prisma db push && node prisma/seed.js",
+    "server": "cd server && node src/server.js",
+    "server:dev": "cd server && node --watch src/server.js",
+    "client": "cd client && npm run dev",
+    "build:client": "cd client && npm run build"
+  },
+  "keywords": [
+    "pos",
+    "inventory",
+    "billing",
+    "business-management",
+    "crm",
+    "accounting",
+    "payroll",
+    "recharts",
+    "prisma",
+    "express",
+    "react",
+    "vite"
+  ],
+  "author": "SBMS Engineering Team",
+  "license": "MIT"
+}
