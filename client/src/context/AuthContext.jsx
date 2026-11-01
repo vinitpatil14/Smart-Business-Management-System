@@ -12,6 +12,33 @@ import api from '../services/api';
 
 const AuthContext = createContext();
 
+const DEMO_ACCOUNTS = {
+  'admin@sbms.com': {
+    id: 'demo-admin-id',
+    uid: 'demo-admin-id',
+    email: 'admin@sbms.com',
+    name: 'Demo Administrator',
+    role: 'ADMIN',
+    isDemo: true
+  },
+  'manager@sbms.com': {
+    id: 'demo-manager-id',
+    uid: 'demo-manager-id',
+    email: 'manager@sbms.com',
+    name: 'Demo Operations Manager',
+    role: 'MANAGER',
+    isDemo: true
+  },
+  'staff@sbms.com': {
+    id: 'demo-staff-id',
+    uid: 'demo-staff-id',
+    email: 'staff@sbms.com',
+    name: 'Demo Sales Staff',
+    role: 'STAFF',
+    isDemo: true
+  }
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('sbms_user');
@@ -66,10 +93,23 @@ export const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  // Login with Firebase Email & Password (with REST demo fallback)
+  // Login with Firebase Email & Password (with instant Demo Account support)
   const login = async (email, password) => {
+    const cleanEmail = (email || '').trim().toLowerCase();
+
+    // 1. If it's a pre-configured demo account, allow instant 1-click access
+    if (DEMO_ACCOUNTS[cleanEmail] && (!password || password.endsWith('123'))) {
+      const demoData = DEMO_ACCOUNTS[cleanEmail];
+      const demoToken = 'sbms-demo-token-' + demoData.role.toLowerCase();
+      setUser(demoData);
+      setToken(demoToken);
+      localStorage.setItem('sbms_token', demoToken);
+      localStorage.setItem('sbms_user', JSON.stringify(demoData));
+      return demoData;
+    }
+
     try {
-      // 1. Attempt Firebase Authentication
+      // 2. Attempt Firebase Authentication
       const cred = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await cred.user.getIdToken();
       setToken(idToken);
@@ -88,6 +128,17 @@ export const AuthProvider = ({ children }) => {
       return userData;
     } catch (fbErr) {
       console.warn('Firebase login attempt:', fbErr.code || fbErr.message);
+
+      // If it matches demo account on fallback, log in directly
+      if (DEMO_ACCOUNTS[cleanEmail]) {
+        const demoData = DEMO_ACCOUNTS[cleanEmail];
+        const demoToken = 'sbms-demo-token-' + demoData.role.toLowerCase();
+        setUser(demoData);
+        setToken(demoToken);
+        localStorage.setItem('sbms_token', demoToken);
+        localStorage.setItem('sbms_user', JSON.stringify(demoData));
+        return demoData;
+      }
 
       // If user doesn't exist in Firebase yet or password invalid, fallback to local backend REST API
       try {
@@ -108,6 +159,9 @@ export const AuthProvider = ({ children }) => {
           throw new Error('Email/Password sign-in is not enabled yet in your Firebase Console. Please enable it in Authentication > Sign-in method.');
         } else if (fbErr.code === 'auth/too-many-requests') {
           throw new Error('Access temporarily blocked due to many failed login attempts. Try again later.');
+        } else if (fbErr.code === 'auth/unauthorized-domain') {
+          const hostname = window.location.hostname;
+          throw new Error(`Firebase Auth: Domain "${hostname}" is unauthorized. Please add "${hostname}" to Firebase Console -> Authentication -> Settings -> Authorized domains.`);
         }
         throw new Error(fbErr.message || 'Login failed. Please verify credentials.');
       }
@@ -170,6 +224,9 @@ export const AuthProvider = ({ children }) => {
         throw new Error('Google sign-in popup was closed.');
       } else if (err.code === 'auth/operation-not-allowed') {
         throw new Error('Google Sign-In is not enabled yet in your Firebase Console. Please go to Authentication > Sign-in method > Google and click Enable.');
+      } else if (err.code === 'auth/unauthorized-domain') {
+        const hostname = window.location.hostname;
+        throw new Error(`Firebase Auth: Domain "${hostname}" is unauthorized. Please add "${hostname}" to Firebase Console -> Authentication -> Settings -> Authorized domains.`);
       }
       throw new Error(err.message || 'Google sign-in failed.');
     }

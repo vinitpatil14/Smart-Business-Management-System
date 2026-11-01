@@ -62,11 +62,20 @@ const Login = () => {
     }
   };
 
-  const handleQuickLogin = (quickEmail, quickPassword) => {
+  const handleQuickLogin = async (quickEmail, quickPassword) => {
     setIsRegister(false);
     setEmail(quickEmail);
     setPassword(quickPassword);
     setError('');
+    setLoading(true);
+    try {
+      await login(quickEmail, quickPassword);
+      navigate('/dashboard', { replace: true });
+    } catch (err) {
+      setError(err.message || 'Demo login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -113,9 +122,40 @@ const Login = () => {
           </div>
 
           {error && (
-            <div className="mb-5 flex items-center gap-2 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 text-xs font-medium">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{error}</span>
+            <div className="mb-5 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-700 dark:text-rose-300 text-xs">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-rose-600 dark:text-rose-400" />
+                <div className="space-y-1.5 flex-1">
+                  <p className="font-semibold">{error}</p>
+                  {(error.toLowerCase().includes('unauthorized') || error.toLowerCase().includes('authorized domain')) && (
+                    <div className="mt-2 p-2.5 rounded-lg bg-white/80 dark:bg-slate-900/70 border border-rose-200 dark:border-rose-900/60 text-[11px] text-gray-700 dark:text-gray-300">
+                      <p className="font-bold text-indigo-600 dark:text-indigo-400 mb-1">
+                        🛠️ Fix in Firebase Console (Only 1 Step):
+                      </p>
+                      <ol className="list-decimal list-inside space-y-1 text-gray-600 dark:text-gray-300">
+                        <li>
+                          Open{' '}
+                          <a
+                            href="https://console.firebase.google.com/project/sbms-34c40/authentication/settings"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="underline font-bold text-indigo-600 dark:text-indigo-400"
+                          >
+                            Firebase Console &gt; Auth Settings
+                          </a>
+                        </li>
+                        <li>Go to <b>"Authorized domains"</b> tab</li>
+                        <li>
+                          Click <b>"Add domain"</b> and paste:
+                          <code className="ml-1.5 px-1.5 py-0.5 bg-gray-100 dark:bg-slate-800 rounded font-mono font-bold text-indigo-600 dark:text-indigo-400 select-all">
+                            {window.location.hostname}
+                          </code>
+                        </li>
+                      </ol>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 
