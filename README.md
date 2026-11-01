@@ -21,7 +21,7 @@
 
   <p align="center">
     <a href="#-key-features">Key Features</a> •
-    <a href="#-visual-showcase">Visual Tour</a> •
+    <a href="#-official-brand-identity">Brand Identity</a> •
     <a href="#-architecture--dual-mode">Dual-Mode Architecture</a> •
     <a href="#-quick-start">Quick Start</a> •
     <a href="#-demo-credentials">Demo Accounts</a> •
@@ -39,11 +39,14 @@ Built with a **React 18 + Vite** frontend, a high-throughput **Node.js Express R
 
 ---
 
-## 📸 Visual Showcase
+## 🏷️ Official Brand Identity
 
 <div align="center">
-  <h3>✨ Modern Inventory Telemetry & Live Stock Health</h3>
-  <img src="docs/dashboard-preview.png" alt="NexPulse Inventory & Dashboard Screenshot" width="95%" style="border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);" />
+  <br />
+  <img src="docs/logo.svg" alt="NexPulse Business OS Official Logo" width="340" />
+  <br />
+  <p><b>NexPulse Business OS</b> — <i>Smart Commerce, Predictive Inventory & Business Telemetry</i></p>
+  <br />
 </div>
 
 ---
@@ -141,7 +144,7 @@ Smart-Business-Management-System/
 │
 ├── docs/                       # Project documentation & visual assets
 │   ├── hero-banner.svg
-│   └── dashboard-preview.png
+│   └── logo.svg
 ├── firestore.rules             # Production Cloud Firestore Security Rules
 ├── firebase.json               # Firebase deployment configuration
 ├── .gitignore                  # Security-first exclusions (db, keys, env)
