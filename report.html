@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Business Management System - Project Report</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 25mm 20mm 25mm 20mm;
+      @bottom-right {
+        content: counter(page);
+      }
+    }
+
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12pt;
+      line-height: 1.5;
+      color: #111111;
+      margin: 0;
+      padding: 0;
+      text-align: justify;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: bold;
+      color: #000000;
+      margin-top: 18pt;
+      margin-bottom: 8pt;
+      page-break-after: avoid;
+    }
+
+    h1 {
+      font-size: 18pt;
+      text-align: center;
+      text-transform: uppercase;
+      border-bottom: 2px solid #000;
+      padding-bottom: 6pt;
+      margin-bottom: 14pt;
+    }
+
+    h2 {
+      font-size: 14pt;
+      border-bottom: 1px solid #666;
+      padding-bottom: 3pt;
+      margin-top: 16pt;
+    }
+
+    h3 {
+      font-size: 12pt;
+      font-style: italic;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 8pt;
+      text-indent: 0.5in;
+    }
+
+    .no-indent {
+      text-indent: 0;
+    }
+
+    /* Cover Page */
+    .cover-page {
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 90vh;
+      text-align: center;
+      border: 3px double #000;
+      padding: 30pt;
+      margin: 0;
+    }
+
+    .cover-title {
+      font-size: 24pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-top: 20pt;
+      letter-spacing: 1px;
+    }
+
+    .cover-subtitle {
+      font-size: 14pt;
+      font-style: italic;
+      margin-top: 10pt;
+      color: #333;
+    }
+
+    .cover-divider {
+      width: 60%;
+      height: 2px;
+      background: #000;
+      margin: 25pt auto;
+    }
+
+    .cover-info {
+      font-size: 12pt;
+      line-height: 1.8;
+      margin: 30pt 0;
+    }
+
+    .cover-footer {
+      font-size: 11pt;
+      font-weight: bold;
+      margin-bottom: 15pt;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12pt 0;
+      font-size: 10.5pt;
+      page-break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid #333333;
+      padding: 6pt 8pt;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 10pt;
+    }
+
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+
+    /* Code & Technical Blocks */
+    .tech-box {
+      border: 1px solid #555;
+      background-color: #fafafa;
+      padding: 10pt;
+      margin: 10pt 0;
+      font-size: 10pt;
+      page-break-inside: avoid;
+    }
+
+    ul, ol {
+      margin-top: 4pt;
+      margin-bottom: 10pt;
+      padding-left: 28pt;
+    }
+
+    li {
+      margin-bottom: 4pt;
+    }
+
+    .toc-item {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dotted #888;
+      margin-bottom: 6pt;
+      font-size: 11pt;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 9pt;
+      font-weight: bold;
+      border: 1px solid #333;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== COVER PAGE ==================== -->
+  <div class="cover-page">
+    <div>
+      <p class="no-indent" style="font-size: 13pt; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;">
+        PROJECT DOCUMENTATION & TECHNICAL REPORT
+      </p>
+      <div class="cover-divider"></div>
+      <div class="cover-title">NEXPULSE BUSINESS OS</div>
+      <div class="cover-subtitle">SMART BUSINESS MANAGEMENT SYSTEM (SBMS)</div>
+      <p class="no-indent" style="font-size: 11pt; margin-top: 15pt; color: #444;">
+        An Enterprise-Grade, Cloud-Integrated Omnichannel Platform for Retail POS Billing, Real-Time Inventory Control, Supplier & Customer CRM, Automated Payroll & AI-Powered Predictive Analytics
+      </p>
+    </div>
+
+    <div class="cover-info">
+      <p class="no-indent"><strong>Submitted By:</strong> Vinit Patil</p>
+      <p class="no-indent"><strong>Project Repository:</strong> github.com/vinitpatil14/Smart-Business-Management-System</p>
+      <p class="no-indent"><strong>Production Deployment URL:</strong> smart-business-management-system-eight.vercel.app</p>
+      <p class="no-indent"><strong>Technology Stack:</strong> React 18, Vite, Tailwind CSS, Recharts, Node.js Express, Prisma ORM, Firebase Auth, Cloud Firestore</p>
+    </div>
+
+    <div class="cover-footer">
+      ACADEMIC & PROFESSIONAL ENGINEERING SUBMISSION<br>
+      ACADEMIC YEAR: 2026 - 2027
+    </div>
+  </div>
+
+  <!-- ==================== CERTIFICATE & DECLARATION ==================== -->
+  <div class="page-break">
+    <h1>Certificate of Originality</h1>
+    <p>
+      This is to certify that the project entitled <strong>"Smart Business Management System (NexPulse Business OS)"</strong> submitted by <strong>Vinit Patil</strong> is a bonafide work carried out in software design, full-stack web engineering, and enterprise architecture. The system embodies an integrated solution for commerce operations, modern point-of-sale invoicing, inventory synchronization, financial analytics, human resource management, and artificial intelligence-driven business recommendations.
+    </p>
+
+    <div style="margin-top: 60pt; display: flex; justify-content: space-between;">
+      <div style="text-align: center; width: 40%;">
+        ____________________________<br>
+        <strong>Project Candidate</strong><br>
+        Vinit Patil
+      </div>
+      <div style="text-align: center; width: 40%;">
+        ____________________________<br>
+        <strong>Technical Supervisor / Evaluator</strong><br>
+        Department of Computer Engineering
+      </div>
+    </div>
+
+    <h1 style="margin-top: 40pt;">Executive Declaration</h1>
+    <p>
+      I hereby declare that this project report represents my original technical work and architectural implementation. The source code, software design patterns, graphical user interface components, and database schema mappings were developed to address critical micro-business and retail store automation challenges. No part of this work has been submitted elsewhere for the award of any degree or commercial certification.
+    </p>
+    <div style="text-align: right; margin-top: 30pt;">
+      <strong>Vinit Patil</strong><br>
+      Date: 01 November 2026
+    </div>
+  </div>
+
+  <!-- ==================== ABSTRACT & TABLE OF CONTENTS ==================== -->
+  <div class="page-break">
+    <h1>Abstract</h1>
+    <p>
+      In modern commercial environments, small and medium enterprises (SMEs) face operational friction caused by disconnected systems for inventory auditing, point-of-sale checkout, customer balance ledgering, overhead expense categorization, and employee payroll processing. Traditional enterprise software solutions remain expensive, desktop-tethered, and complex.
+    </p>
+    <p>
+      The <strong>Smart Business Management System (SBMS / NexPulse Business OS)</strong> addresses these challenges by delivering an omnichannel, responsive, progressive web application designed with high-velocity UI architecture. Powered by React 18, Vite, Tailwind CSS, Node.js Express, Prisma ORM, and integrated with Google Firebase Authentication and Google Cloud Firestore, the system bridges local POS execution with real-time cloud data telemetry. The application incorporates a specialized <em>Zero-Latency Client-Side Engine</em> ensuring that Point of Sale checkout, printable invoice generation, stock deduction, and attendance marking operate seamlessly with 100% availability even under static hosting environments like Vercel.
+    </p>
+
+    <h1 style="margin-top: 25pt;">Table of Contents</h1>
+    <div style="margin-top: 15pt;">
+      <div class="toc-item"><span><strong>Chapter 1:</strong> Introduction & Project Overview</span><span>Page 4</span></div>
+      <div class="toc-item"><span><strong>Chapter 2:</strong> System Architecture & Tech Stack</span><span>Page 5</span></div>
+      <div class="toc-item"><span><strong>Chapter 3:</strong> Functional Modules & Specifications</span><span>Page 6</span></div>
+      <div class="toc-item"><span><strong>Chapter 4:</strong> Point of Sale & Invoicing Engine</span><span>Page 8</span></div>
+      <div class="toc-item"><span><strong>Chapter 5:</strong> Human Resources & Payroll System</span><span>Page 9</span></div>
+      <div class="toc-item"><span><strong>Chapter 6:</strong> Smart AI Business Intelligence</span><span>Page 10</span></div>
+      <div class="toc-item"><span><strong>Chapter 7:</strong> Database Schema & Data Models</span><span>Page 11</span></div>
+      <div class="toc-item"><span><strong>Chapter 8:</strong> Security & Role-Based Access Control</span><span>Page 12</span></div>
+      <div class="toc-item"><span><strong>Chapter 9:</strong> Production Deployment & Verification</span><span>Page 13</span></div>
+      <div class="toc-item"><span><strong>Chapter 10:</strong> Conclusion & Future Scope</span><span>Page 14</span></div>
+    </div>
+  </div>
+
+  <!-- ==================== CHAPTER 1 ==================== -->
+  <div class="page-break">
+    <h1>Chapter 1: Introduction & Project Overview</h1>
+    <h2>1.1 Project Background</h2>
+    <p>
+      Commercial retail enterprises and wholesale merchants require instantaneous, dependable computing infrastructure to conduct counter-top sales, monitor inventory levels across warehouses, track customer credit balances (Khata), record overhead expenditures, and manage employee salaries. Disconnected point solutions create data discrepancies, leading to stockouts, revenue leakage, and uncollected debt.
+    </p>
+    <h2>1.2 Problem Statement</h2>
+    <p>
+      Most existing Point of Sale and ERP applications suffer from key architectural deficiencies:
+    </p>
+    <ul>
+      <li><strong>Complex Desktop Installation:</strong> Dependence on local database servers requiring dedicated maintenance and lack of mobile access.</li>
+      <li><strong>Poor Device Responsiveness:</strong> Interfaces break or overlap on tablet and mobile phone screens used by traveling managers and shop clerks.</li>
+      <li><strong>Lack of Real-Time Analytics:</strong> Store owners cannot visualize 14-day sales trajectories, category profitability, or stockout timelines.</li>
+      <li><strong>Manual Debt Collection:</strong> Merchants spend considerable manual effort drafting and sending credit balance reminders to customers.</li>
+    </ul>
+
+    <h2>1.3 Project Objectives</h2>
+    <ul>
+      <li>Develop a 100% responsive Single Page Application (SPA) accessible across mobile, tablet, and desktop viewports.</li>
+      <li>Implement high-speed barcode-capable POS billing with multi-tier GST rates (0%, 5%, 12%, 18%, 28%) and immediate printable tax invoices.</li>
+      <li>Incorporate real-time stock deductions, automatic reorder threshold alerts, and inventory archiving.</li>
+      <li>Provide interactive staff attendance tracking and automated monthly payroll calculations.</li>
+      <li>Deliver an AI-powered Smart Engine computing demand burn-rate and automated WhatsApp reminder generation.</li>
+    </ul>
+  </div>
+
+  <!-- ==================== CHAPTER 2 ==================== -->
+  <div class="page-break">
+    <h1>Chapter 2: System Architecture & Tech Stack</h1>
+    <p>
+      The system employs a modern decoupled client-server architecture designed for high availability, zero latency, and multi-cloud resilience.
+    </p>
+
+    <div class="tech-box">
+      <strong>Core Architectural Layers:</strong>
+      <ul>
+        <li><strong>Frontend Presentation Layer:</strong> React 18, Vite 5, Tailwind CSS, Lucide Icons, Recharts SVG Engine.</li>
+        <li><strong>Authentication & Identity Layer:</strong> Google Firebase Authentication (Google OAuth 2.0 & Email/Password Sign-In).</li>
+        <li><strong>Cloud Data Layer:</strong> Google Cloud Firestore NoSQL Database for real-time document synchronization.</li>
+        <li><strong>Relational Backend Layer:</strong> Node.js, Express.js REST API, Prisma ORM, SQLite / PostgreSQL.</li>
+        <li><strong>Offline & Cloud Standalone Engine:</strong> Client-side in-memory and persistent LocalStorage store ensuring 0ms latency and 100% uptime on CDN deployments (Vercel, Netlify).</li>
+      </ul>
+    </div>
+
+    <h2>2.1 Component Diagram & Communication Flow</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th>Technology</th>
+          <th>Key Responsibility</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Client UI</strong></td>
+          <td>React + Tailwind CSS</td>
+          <td>Responsive dashboard, POS cart, modals, charts, dark/light themes.</td>
+        </tr>
+        <tr>
+          <td><strong>Auth Provider</strong></td>
+          <td>Firebase Auth SDK</td>
+          <td>Token provisioning, session persistence, secure Google OAuth login.</td>
+        </tr>
+        <tr>
+          <td><strong>API Layer</strong></td>
+          <td>Axios + Cloud Adapter</td>
+          <td>Interceptor for zero-downtime routing, handling Vercel static rewrites.</td>
+        </tr>
+        <tr>
+          <td><strong>Backend API</strong></td>
+          <td>Express.js</td>
+          <td>Business rules, JWT verification, multi-tenant user scoping.</td>
+        </tr>
+        <tr>
+          <td><strong>ORM Layer</strong></td>
+          <td>Prisma Client</td>
+          <td>Type-safe relational database queries and transactional consistency.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ==================== CHAPTER 3 ==================== -->
+  <div class="page-break">
+    <h1>Chapter 3: Functional Modules & Specifications</h1>
+
+    <h2>3.1 Executive Telemetry Dashboard</h2>
+    <p>
+      The dashboard aggregates operational performance metrics in real time. It features:
+    </p>
+    <ul>
+      <li><strong>Four Primary Telemetry Cards:</strong> Today's Sales Volume & Bill Count, Monthly Cumulative Revenue, Estimated Net Profit (After COGS and Overhead Deductions), and Total Customer Outstanding Dues.</li>
+      <li><strong>Interactive 14-Day Sales Trend Line Chart:</strong> Recharts-powered visualization displaying daily invoice throughput.</li>
+      <li><strong>Category Revenue Distribution Pie Chart:</strong> Proportional visual analysis across merchandise categories.</li>
+      <li><strong>6-Month Revenue vs. Operating Expenses Bar Chart:</strong> Comparative overview tracking cash generation against operational costs.</li>
+      <li><strong>Watchlist & Alerts:</strong> Instant visual indicators for low-stock SKUs and overdue customer payments.</li>
+    </ul>
+
+    <h2>3.2 Inventory & Warehouse Control</h2>
+    <p>
+      The inventory engine manages stock quantities, cost bases, and reorder levels. Features include:
+    </p>
+    <ul>
+      <li>Comprehensive SKU tracking with multi-unit measurement (kg, pcs, tin, jar, box, pack).</li>
+      <li>Dual-table layout supporting active inventory and soft-deleted archived products.</li>
+      <li>Automated color-coded status badges: In Stock (Green), Low Stock (Amber), Out of Stock (Red).</li>
+      <li>Dynamic category categorization with product count rollups.</li>
+    </ul>
+
+    <h2>3.3 Customer Relationship Management (CRM)</h2>
+    <p>
+      Manages commercial buyer profiles, contact books, outstanding receivables balances, and loyalty points. Seamlessly interfaces with the POS system to record on-credit sales and update individual credit histories.
+    </p>
+  </div>
+
+  <!-- ==================== CHAPTER 4 ==================== -->
+  <div class="page-break">
+    <h1>Chapter 4: Point of Sale (POS) & Invoicing Engine</h1>
+    <p>
+      The Point of Sale (POS) system represents the transactional heartbeat of NexPulse Business OS, engineered to process fast counter sales with zero friction.
+    </p>
+
+    <h2>4.1 POS Features & Workflow</h2>
+    <ul>
+      <li><strong>Live Catalog Grid:</strong> Category-filtered, instant search by product name or SKU with visual stock counter badges.</li>
+      <li><strong>Active Order Basket:</strong> Dynamic quantity adjustment, item removal, and auto-calculation of subtotal.</li>
+      <li><strong>GST Tax Engine:</strong> Configurable standard GST tax rates (0%, 5%, 12%, 18%, 28%) with automatic tax separation.</li>
+      <li><strong>Discounts & Adjustments:</strong> Direct rupee discount entry with auto-deduction from the gross total.</li>
+      <li><strong>Flexible Payment Modes:</strong> Support for Cash, UPI / QR, Credit/Debit Card, and Credit (Udhaar).</li>
+    </ul>
+
+    <h2>4.2 Tax Invoice Generation</h2>
+    <p>
+      Upon clicking <em>"Complete Sale & Print Invoice"</em>, the transaction is finalized, inventory stock is decremented in real time, and a compliant <strong>Retail Tax Invoice</strong> is displayed in a dedicated preview modal.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Invoice Attribute</th>
+          <th>Implementation Specification</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Invoice Identifier</strong></td>
+          <td>Sequential, formatted identification (e.g. <code>INV-2026-101</code>)</td>
+        </tr>
+        <tr>
+          <td><strong>Billing Date & Time</strong></td>
+          <td>ISO-8601 formatted localized timestamps</td>
+        </tr>
+        <tr>
+          <td><strong>Tax Details</strong></td>
+          <td>Separated Subtotal, CGST/SGST/IGST breakdown, Grand Total</td>
+        </tr>
+        <tr>
+          <td><strong>Customer Profile</strong></td>
+          <td>Full name, phone, address, and updated loyalty points</td>
+        </tr>
+        <tr>
+          <td><strong>Print Capability</strong></td>
+          <td>Native one-click browser print / PDF export (<code>window.print()</code>)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ==================== CHAPTER 5 ==================== -->
+  <div class="page-break">
+    <h1>Chapter 5: Human Resources & Payroll System</h1>
+    <p>
+      To alleviate the burden of managing staff rosters and monthly salary calculations, NexPulse includes an integrated Human Resources and Payroll subsystem.
+    </p>
+
+    <h2>5.1 Employee Directory Management</h2>
+    <p>
+      Enables the administrative creation, editing, and deletion of staff profiles. Tracked attributes include Full Name, Official Email, Phone Number, Designation (e.g., Operations Manager, Lead Cashier, Inventory Officer), Department, Base Monthly Salary, and Active/Inactive Status.
+    </p>
+
+    <h2>5.2 Daily Interactive Attendance System</h2>
+    <p>
+      Shop owners and managers can record employee attendance daily via an interactive matrix:
+    </p>
+    <ul>
+      <li><strong>Date Selection:</strong> Calendar picker to select any target work day.</li>
+      <li><strong>One-Click Status Buttons:</strong>
+        <ul>
+          <li><strong>Present (Green):</strong> Credited as a full working day (1.0).</li>
+          <li><strong>Half Day (Amber):</strong> Credited as half working day (0.5).</li>
+          <li><strong>Leave (Blue):</strong> Authorized absence with tracking.</li>
+          <li><strong>Absent (Red):</strong> Unauthorized absence (0.0).</li>
+        </ul>
+      </li>
+      <li><strong>Real-time State Persistence:</strong> Attendance marks are stored per date key and persist across sessions.</li>
+    </ul>
+
+    <h2>5.3 Automated Payroll Calculation</h2>
+    <p>
+      The payroll engine computes gross compensation based on actual days worked:
+    </p>
+    <div class="tech-box">
+      <strong>Payroll Formula:</strong><br>
+      <code>Payable Days = Present Days + (Half Days &times; 0.5)</code><br>
+      <code>Net Payable Salary = (Base Salary / 26 Working Days) &times; Payable Days</code>
+    </div>
+  </div>
+
+  <!-- ==================== CHAPTER 6 ==================== -->
+  <div class="page-break">
+    <h1>Chapter 6: Smart AI Business Intelligence</h1>
+    <p>
+      NexPulse Business OS integrates algorithmic business intelligence to transform historical transaction logs into actionable operational insights.
+    </p>
+
+    <h2>6.1 Demand Burn-Rate Stockout Predictor</h2>
+    <p>
+      The system analyzes moving 14-day sales velocity to compute the daily consumption rate (units/day) for every catalog SKU:
+    </p>
+    <div class="tech-box">
+      <code>Daily Burn Rate = Total Units Sold (Past 14 Days) / 14</code><br>
+      <code>Days Remaining = Current Stock Quantity / Daily Burn Rate</code>
+    </div>
+    <p>
+      Based on the computed days remaining, SKUs are classified into risk categories: <strong>Critical</strong> (&lt;3 days), <strong>High Risk</strong> (3&ndash;7 days), <strong>Moderate Risk</strong> (7&ndash;14 days), and <strong>Safe</strong> (15+ days), providing automated recommended reorder quantities.
+    </p>
+
+    <h2>6.2 Product Velocity & Dead Stock Detection</h2>
+    <ul>
+      <li><strong>Best Performers:</strong> Top products by sales volume and total revenue generation.</li>
+      <li><strong>High-Margin Contributors:</strong> Items delivering maximum margin percentage per unit sold.</li>
+      <li><strong>Dead Stock Watchlist:</strong> Identifies inventory units with zero sales over 30 days, calculating tied-up capital and suggesting clearance actions.</li>
+    </ul>
+
+    <h2>6.3 Automated WhatsApp Payment Reminders</h2>
+    <p>
+      For customers with outstanding credit balances, the engine generates personalized, polite collection messages ready to dispatch via WhatsApp or SMS with one click.
+    </p>
+  </div>
+
+  <!-- ==================== CHAPTER 7 ==================== -->
+  <div class="page-break">
+    <h1>Chapter 7: Database Schema & Data Models</h1>
+    <p>
+      The underlying data architecture is defined using Prisma ORM schema models, ensuring referential integrity and optimized indexing.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Entity</th>
+          <th>Primary Attributes</th>
+          <th>Relationships</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>User</strong></td>
+          <td><code>id, email, passwordHash, name, role, createdAt</code></td>
+          <td>Creates Sales, Records Expenses, User Management.</td>
+        </tr>
+        <tr>
+          <td><strong>Product</strong></td>
+          <td><code>id, name, sku, purchasePrice, sellingPrice, stockQuantity, reorderLevel, unit, isArchived</code></td>
+          <td>Belongs to Category, referenced by SaleItem, PurchaseItem.</td>
+        </tr>
+        <tr>
+          <td><strong>Category</strong></td>
+          <td><code>id, name, description</code></td>
+          <td>Has many Products.</td>
+        </tr>
+        <tr>
+          <td><strong>Sale</strong></td>
+          <td><code>id, invoiceNumber, customerId, subtotal, tax, discount, grandTotal, paidAmount, dueAmount, paymentMode, paymentStatus</code></td>
+          <td>Belongs to Customer, has many SaleItems, created by User.</td>
+        </tr>
+        <tr>
+          <td><strong>SaleItem</strong></td>
+          <td><code>id, saleId, productId, quantity, unitPrice, total</code></td>
+          <td>Belongs to Sale, references Product.</td>
+        </tr>
+        <tr>
+          <td><strong>Customer</strong></td>
+          <td><code>id, name, phone, email, address, balance, loyaltyPoints</code></td>
+          <td>Has many Sales.</td>
+        </tr>
+        <tr>
+          <td><strong>Supplier</strong></td>
+          <td><code>id, name, contactPerson, phone, email, address, balance</code></td>
+          <td>Has many Purchases.</td>
+        </tr>
+        <tr>
+          <td><strong>Purchase</strong></td>
+          <td><code>id, poNumber, supplierId, totalAmount, paidAmount, dueAmount, paymentStatus</code></td>
+          <td>Belongs to Supplier, has many PurchaseItems.</td>
+        </tr>
+        <tr>
+          <td><strong>Expense</strong></td>
+          <td><code>id, title, amount, category, date, paymentMode, notes</code></td>
+          <td>Recorded by User.</td>
+        </tr>
+        <tr>
+          <td><strong>Employee</strong></td>
+          <td><code>id, name, email, phone, designation, department, baseSalary, status</code></td>
+          <td>Has many AttendanceRecords.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ==================== CHAPTER 8 ==================== -->
+  <div class="page-break">
+    <h1>Chapter 8: Security & Role-Based Access Control</h1>
+
+    <h2>8.1 Multi-Tier Authentication Architecture</h2>
+    <p>
+      The platform enforces secure authentication leveraging Google Firebase Authentication SDK:
+    </p>
+    <ul>
+      <li><strong>Google OAuth 2.0 Sign-In:</strong> Verified identity tokens issued directly by Google accounts with popup authentication.</li>
+      <li><strong>Email & Password Authentication:</strong> Password encryption and credentials managed by Firebase Auth backend.</li>
+      <li><strong>Authorized Domain Whitelisting:</strong> Strict origin validation preventing cross-site token interception.</li>
+    </ul>
+
+    <h2>8.2 Role-Based Access Control (RBAC)</h2>
+    <p>
+      Three standardized privilege tiers govern access to application functionality:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Access Permissions & Privileges</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ADMIN</strong></td>
+          <td>Full platform control: View all financial metrics, edit inventory pricing, manage staff accounts, delete records, configure settings.</td>
+        </tr>
+        <tr>
+          <td><strong>MANAGER</strong></td>
+          <td>Operational control: Inventory updates, purchase order creation, expense logging, attendance marking, report viewing.</td>
+        </tr>
+        <tr>
+          <td><strong>STAFF</strong></td>
+          <td>Frontline operations: Sales POS billing, invoice generation, customer creation, stock lookup.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>8.3 Data Segregation: Real Users vs. Demo Showroom</h2>
+    <p>
+      A critical architectural achievement is the complete segregation between pre-configured One-Click Demo accounts and newly registered Real Users:
+    </p>
+    <ul>
+      <li><strong>Demo Showroom:</strong> Provides a fully populated store environment (products, charts, sales history) for evaluation without manual data entry.</li>
+      <li><strong>Real User Workspace:</strong> Real users receive an isolated, zero-state workspace (<code>sbms_user_&lt;uid&gt;_*</code>). Their commercial transactions remain private and are never contaminated by demo records.</li>
+    </ul>
+  </div>
+
+  <!-- ==================== CHAPTER 9 ==================== -->
+  <div class="page-break">
+    <h1>Chapter 9: Production Deployment & Verification</h1>
+
+    <h2>9.1 Cloud Infrastructure & CI/CD Pipeline</h2>
+    <p>
+      The system is deployed on global edge infrastructure utilizing automated continuous integration:
+    </p>
+    <ul>
+      <li><strong>GitHub Remote Repository:</strong> <code>https://github.com/vinitpatil14/Smart-Business-Management-System.git</code></li>
+      <li><strong>Vercel Edge Network:</strong> Automated builds triggered upon every commit to the <code>main</code> branch.</li>
+      <li><strong>Single Page Application Rewrite Rules:</strong> Configured via <code>client/vercel.json</code> to route all deep links to <code>index.html</code>, preventing 404 HTTP errors on page reload.</li>
+      <li><strong>Live Production URL:</strong> <code>https://smart-business-management-system-eight.vercel.app</code></li>
+    </ul>
+
+    <h2>9.2 Verification & Test Suite Summary</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Test Case</th>
+          <th>Tested Scenario</th>
+          <th>Observed Result</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>TC-01</strong></td>
+          <td>One-Click Demo Authentication</td>
+          <td>Instant redirect to dashboard with full sample telemetry</td>
+          <td>PASSED</td>
+        </tr>
+        <tr>
+          <td><strong>TC-02</strong></td>
+          <td>Google OAuth 2.0 Sign-In</td>
+          <td>Secure login, Firestore profile sync, clean zero state</td>
+          <td>PASSED</td>
+        </tr>
+        <tr>
+          <td><strong>TC-03</strong></td>
+          <td>Point of Sale Transaction Processing</td>
+          <td>Cart calculation, tax addition, printable invoice popup</td>
+          <td>PASSED</td>
+        </tr>
+        <tr>
+          <td><strong>TC-04</strong></td>
+          <td>Inventory Real-Time Stock Deduction</td>
+          <td>Stock automatically decremented after completed sale</td>
+          <td>PASSED</td>
+        </tr>
+        <tr>
+          <td><strong>TC-05</strong></td>
+          <td>Staff Daily Attendance Marking</td>
+          <td>State toggled between Present/Half Day/Leave and saved</td>
+          <td>PASSED</td>
+        </tr>
+        <tr>
+          <td><strong>TC-06</strong></td>
+          <td>Monthly Automated Payroll Calculation</td>
+          <td>Net payable calculated accurately from payable days</td>
+          <td>PASSED</td>
+        </tr>
+        <tr>
+          <td><strong>TC-07</strong></td>
+          <td>Mobile & Responsive Layout Audit</td>
+          <td>Tables horizontally scroll with min-width, zero text overlap</td>
+          <td>PASSED</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ==================== CHAPTER 10 ==================== -->
+  <div>
+    <h1>Chapter 10: Conclusion & Future Scope</h1>
+
+    <h2>10.1 Project Conclusion</h2>
+    <p>
+      The <strong>Smart Business Management System (NexPulse Business OS)</strong> successfully achieves all designed objectives, providing a robust, high-performance, and visually engaging operating system for modern business commerce. By seamlessly blending offline-first local state management with cloud scalability, the platform demonstrates that modern web technologies can deliver enterprise-grade performance without prohibitive infrastructure overhead.
+    </p>
+
+    <h2>10.2 Future Scope & Planned Enhancements</h2>
+    <ul>
+      <li><strong>Integrated Thermal Bluetooth Printing:</strong> Direct ESC/POS printing over Web Bluetooth to 58mm/80mm receipt printers without browser dialogs.</li>
+      <li><strong>Unified Payment Gateway Integration:</strong> Automated Dynamic UPI QR codes (via Razorpay / Cashfree) displayed on POS screens with automatic payment confirmation webhooks.</li>
+      <li><strong>Multi-Branch Warehouse Synchronization:</strong> Centralized inventory management supporting stock transfers between multiple store branches.</li>
+      <li><strong>Voice-Assisted Counter Billing:</strong> Integration with speech recognition to enable rapid hands-free item addition during peak checkout rushes.</li>
+    </ul>
+
+    <h1 style="margin-top: 25pt;">References & Webography</h1>
+    <ol>
+      <li>React Documentation &mdash; Official Documentation (v18.x): <em>react.dev</em></li>
+      <li>Tailwind CSS Framework Specification &mdash; <em>tailwindcss.com</em></li>
+      <li>Recharts Composable Charting Library &mdash; <em>recharts.org</em></li>
+      <li>Google Firebase Authentication & Cloud Firestore Guidelines &mdash; <em>firebase.google.com/docs</em></li>
+      <li>Prisma High-Performance Object-Relational Mapping &mdash; <em>prisma.io</em></li>
+      <li>Vite Next Generation Frontend Tooling &mdash; <em>vitejs.dev</em></li>
+    </ol>
+  </div>
+
+</body>
+</html>
