@@ -10,8 +10,11 @@ import {
   ShoppingCart,
   ArrowRight,
   Sparkles,
-  RefreshCw
+  RefreshCw,
+  Database,
+  CheckCircle2
 } from 'lucide-react';
+import { seedInitialFirestoreData } from '../services/firestoreService';
 import {
   LineChart,
   Line,
@@ -37,8 +40,26 @@ const Dashboard = () => {
   const [charts, setCharts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [syncingFirestore, setSyncingFirestore] = useState(false);
+  const [syncStatus, setSyncStatus] = useState(null);
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const handleSyncToFirestore = async () => {
+    try {
+      setSyncingFirestore(true);
+      setSyncStatus(null);
+      const res = await seedInitialFirestoreData();
+      setSyncStatus({ success: true, message: res.message });
+      setTimeout(() => setSyncStatus(null), 5000);
+    } catch (err) {
+      console.error(err);
+      setSyncStatus({ success: false, message: 'Sync failed: ' + (err.message || 'Check connection') });
+      setTimeout(() => setSyncStatus(null), 5000);
+    } finally {
+      setSyncingFirestore(false);
+    }
+  };
 
   const fetchDashboardData = async () => {
     try {
@@ -86,7 +107,18 @@ const Dashboard = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Firestore Cloud Sync Button */}
+          <button
+            onClick={handleSyncToFirestore}
+            disabled={syncingFirestore}
+            title="Upload initial demo products and customers directly to your Cloud Firestore database"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-300/80 dark:border-amber-700/60 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-xs font-semibold text-amber-800 dark:text-amber-300 transition"
+          >
+            <Database className={`w-3.5 h-3.5 text-amber-600 dark:text-amber-400 ${syncingFirestore ? 'animate-bounce' : ''}`} />
+            <span>{syncingFirestore ? 'Syncing...' : 'Sync to Firestore'}</span>
+          </button>
+
           <button
             onClick={fetchDashboardData}
             disabled={refreshing}
@@ -105,6 +137,17 @@ const Dashboard = () => {
           </button>
         </div>
       </div>
+
+      {syncStatus && (
+        <div className={`p-3 rounded-xl text-xs font-medium flex items-center gap-2 ${
+          syncStatus.success 
+            ? 'bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300'
+            : 'bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300'
+        }`}>
+          {syncStatus.success ? <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" /> : <AlertTriangle className="w-4 h-4 text-rose-600 flex-shrink-0" />}
+          <span>{syncStatus.message}</span>
+        </div>
+      )}
 
       {/* 4 Primary Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

@@ -1,0 +1,173 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* =========================================================================
+       HELPER FUNCTIONS
+       ========================================================================= */
+    function isAuthenticated() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function hasUserDoc() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function getUserRole() {
+      return hasUserDoc() ? getUserData().role : 'STAFF';
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        (request.auth.token.role == 'ADMIN') ||
+        (getUserRole() == 'ADMIN')
+      );
+    }
+
+    function isManager() {
+      return isAuthenticated() && (
+        isAdmin() ||
+        (request.auth.token.role == 'MANAGER') ||
+        (getUserRole() == 'MANAGER')
+      );
+    }
+
+    function isStaff() {
+      return isAuthenticated() && (
+        isManager() ||
+        (request.auth.token.role == 'STAFF') ||
+        (getUserRole() == 'STAFF')
+      );
+    }
+
+    /* =========================================================================
+       COLLECTION: users
+       - Users can read/write their own profile doc.
+       - Only Admins can change user roles or delete users.
+       ========================================================================= */
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      
+      // Allow self-registration or admin creation
+      allow create: if isAuthenticated() && (
+        isOwner(userId) || isAdmin()
+      );
+
+      // Self can update profile info, but cannot self-promote role unless Admin
+      allow update: if isAuthenticated() && (
+        isAdmin() || (
+          isOwner(userId) &&
+          (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'status']))
+        )
+      );
+
+      allow delete: if isAdmin() && !isOwner(userId);
+    }
+
+    /* =========================================================================
+       COLLECTION: products
+       - Any authenticated user can read active products.
+       - Staff can update stock quantity (during sales POS deduction).
+       - Managers & Admins have full CRUD access.
+       ========================================================================= */
+    match /products/{productId} {
+      allow read: if isAuthenticated();
+      
+      allow create: if isManager();
+
+      allow update: if isManager() || (
+        isStaff() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stockQuantity', 'updatedAt'])
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    /* =========================================================================
+       COLLECTION: categories
+       ========================================================================= */
+    match /categories/{categoryId} {
+      allow read: if isAuthenticated();
+      allow write: if isManager();
+    }
+
+    /* =========================================================================
+       COLLECTION: customers
+       - All staff can view customers and create/update customer ledger/loyalty points.
+       - Delete restricted to Admin.
+       ========================================================================= */
+    match /customers/{customerId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isStaff();
+      allow delete: if isAdmin();
+    }
+
+    /* =========================================================================
+       COLLECTION: suppliers
+       ========================================================================= */
+    match /suppliers/{supplierId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager();
+      allow delete: if isAdmin();
+    }
+
+    /* =========================================================================
+       COLLECTION: sales
+       - Staff, Managers, and Admins can record sales transactions.
+       - Sales records are immutable (cannot be arbitrarily edited after generation).
+       ========================================================================= */
+    match /sales/{saleId} {
+      allow read: if isAuthenticated();
+      allow create: if isStaff();
+      allow update, delete: if isAdmin();
+    }
+
+    /* =========================================================================
+       COLLECTION: purchases
+       - Managers and Admins can record purchase stock entries.
+       ========================================================================= */
+    match /purchases/{purchaseId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isManager();
+      allow delete: if isAdmin();
+    }
+
+    /* =========================================================================
+       COLLECTION: expenses
+       ========================================================================= */
+    match /expenses/{expenseId} {
+      allow read: if isAuthenticated();
+      allow create: if isStaff();
+      allow update, delete: if isManager();
+    }
+
+    /* =========================================================================
+       COLLECTION: employees & attendance
+       - Employees management is restricted to Admins & HR Managers.
+       ========================================================================= */
+    match /employees/{employeeId} {
+      allow read: if isManager();
+      allow write: if isAdmin();
+    }
+
+    match /attendance/{attendanceId} {
+      allow read: if isStaff();
+      allow create, update: if isManager();
+      allow delete: if isAdmin();
+    }
+
+    /* =========================================================================
+       DEFAULT RULE: Deny all unmatched access
+       ========================================================================= */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
