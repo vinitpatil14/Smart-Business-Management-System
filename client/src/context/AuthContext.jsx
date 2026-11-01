@@ -25,6 +25,10 @@ export const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         try {
+          const idToken = await firebaseUser.getIdToken();
+          setToken(idToken);
+          localStorage.setItem('sbms_token', idToken);
+
           const profile = await syncUserProfile(firebaseUser);
           const userData = {
             id: firebaseUser.uid,
@@ -60,6 +64,10 @@ export const AuthProvider = ({ children }) => {
     try {
       // 1. Attempt Firebase Authentication
       const cred = await signInWithEmailAndPassword(auth, email, password);
+      const idToken = await cred.user.getIdToken();
+      setToken(idToken);
+      localStorage.setItem('sbms_token', idToken);
+
       const profile = await syncUserProfile(cred.user);
       const userData = {
         id: cred.user.uid,
@@ -103,6 +111,10 @@ export const AuthProvider = ({ children }) => {
   const signup = async (email, password, name, role = 'STAFF') => {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
+      const idToken = await cred.user.getIdToken();
+      setToken(idToken);
+      localStorage.setItem('sbms_token', idToken);
+
       const profile = await syncUserProfile(cred.user, { name, role });
       const userData = {
         id: cred.user.uid,
@@ -130,6 +142,10 @@ export const AuthProvider = ({ children }) => {
   const loginWithGoogle = async () => {
     try {
       const res = await signInWithPopup(auth, googleProvider);
+      const idToken = await res.user.getIdToken();
+      setToken(idToken);
+      localStorage.setItem('sbms_token', idToken);
+
       const profile = await syncUserProfile(res.user);
       const userData = {
         id: res.user.uid,
@@ -145,6 +161,8 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       if (err.code === 'auth/popup-closed-by-user') {
         throw new Error('Google sign-in popup was closed.');
+      } else if (err.code === 'auth/operation-not-allowed') {
+        throw new Error('Google Sign-In is not enabled yet in your Firebase Console. Please go to Authentication > Sign-in method > Google and click Enable.');
       }
       throw new Error(err.message || 'Google sign-in failed.');
     }

@@ -16,9 +16,16 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  const { login, signup, loginWithGoogle } = useAuth();
+  const { user, login, signup, loginWithGoogle } = useAuth();
   const { theme } = useTheme();
   const navigate = useNavigate();
+
+  // If already logged in, redirect directly to dashboard
+  React.useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +37,7 @@ const Login = () => {
       if (isRegister) {
         await signup(email, password, name, role);
         setSuccessMsg('Account created successfully in Firebase! Redirecting...');
-        setTimeout(() => navigate('/dashboard'), 1000);
+        navigate('/dashboard');
       } else {
         await login(email, password);
         navigate('/dashboard');
