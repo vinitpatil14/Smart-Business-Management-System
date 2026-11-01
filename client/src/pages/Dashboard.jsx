@@ -40,49 +40,62 @@ const DEMO_FALLBACK_SUMMARY = {
   todaySalesAmount: 24500,
   todaySalesCount: 14,
   monthlyRevenue: 382400,
-  monthlyNetProfit: 94600,
+  monthlySalesCount: 142,
+  monthlyExpenses: 42800,
+  estimatedProfit: 94600,
   profitMargin: '24.7',
   totalInventoryValuation: 875000,
-  lowStockItemsCount: 3,
-  outOfStockItemsCount: 1,
+  lowStockCount: 2,
+  outOfStockItemsCount: 0,
   totalProductsCount: 48,
-  pendingDuesAmount: 12500,
+  pendingPaymentsTotal: 2100,
+  pendingCustomersCount: 2,
   topSellingProducts: [
-    { id: 1, name: 'Premium Arabica Coffee Beans 1kg', totalQty: 142, revenue: 127800 },
-    { id: 2, name: 'Organic Green Tea Tin 250g', totalQty: 98, revenue: 44100 },
-    { id: 3, name: 'Cold Pressed Virgin Coconut Oil 1L', totalQty: 64, revenue: 38400 },
-    { id: 4, name: 'Raw Himalayan Honey 500g', totalQty: 52, revenue: 28600 }
+    { id: 1, name: 'Premium Arabica Coffee Beans 1kg', sku: 'SKU-COF-01', category: 'Beverages', unitsSold: 142, totalSales: 127800 },
+    { id: 2, name: 'Organic Green Tea Tin 250g', sku: 'SKU-TEA-02', category: 'Beverages', unitsSold: 98, totalSales: 44100 },
+    { id: 3, name: 'Cold Pressed Virgin Coconut Oil 1L', sku: 'SKU-OIL-03', category: 'Organic Grocery', unitsSold: 64, totalSales: 38400 },
+    { id: 4, name: 'Raw Himalayan Honey 500g', sku: 'SKU-HNY-04', category: 'Organic Grocery', unitsSold: 52, totalSales: 28600 }
   ],
   recentSales: [
     { id: 101, invoiceNumber: 'INV-2026-089', customerName: 'Rahul Sharma', grandTotal: 2450, paymentMethod: 'UPI', createdAt: new Date().toISOString() },
     { id: 102, invoiceNumber: 'INV-2026-088', customerName: 'Priya Deshmukh', grandTotal: 1890, paymentMethod: 'CASH', createdAt: new Date(Date.now() - 3600000).toISOString() },
     { id: 103, invoiceNumber: 'INV-2026-087', customerName: 'Amit Patil', grandTotal: 4120, paymentMethod: 'CARD', createdAt: new Date(Date.now() - 7200000).toISOString() }
   ],
-  lowStockAlerts: [
-    { id: 1, name: 'Premium Arabica Coffee Beans 1kg', stock: 4, minStockAlert: 10, sku: 'SKU-COF-01' },
-    { id: 2, name: 'Organic Green Tea Tin 250g', stock: 2, minStockAlert: 8, sku: 'SKU-TEA-02' }
+  lowStockList: [
+    { id: 5, name: 'Wireless Optical Barcode Scanner', stockQuantity: 8, reorderLevel: 10, sku: 'SKU-SCAN-05' },
+    { id: 2, name: 'Organic Green Tea Tin 250g', stockQuantity: 14, reorderLevel: 15, sku: 'SKU-TEA-02' }
   ]
 };
 
 const DEMO_FALLBACK_CHARTS = {
-  weeklyRevenue: [
-    { day: 'Mon', revenue: 28500, bills: 12 },
-    { day: 'Tue', revenue: 34200, bills: 15 },
-    { day: 'Wed', revenue: 41000, bills: 18 },
-    { day: 'Thu', revenue: 31800, bills: 14 },
-    { day: 'Fri', revenue: 48900, bills: 22 },
-    { day: 'Sat', revenue: 62400, bills: 29 },
-    { day: 'Sun', revenue: 54600, bills: 25 }
+  salesTrend: [
+    { date: '19 Oct', sales: 18400, orders: 9 },
+    { date: '20 Oct', sales: 22100, orders: 11 },
+    { date: '21 Oct', sales: 19800, orders: 10 },
+    { date: '22 Oct', sales: 26500, orders: 13 },
+    { date: '23 Oct', sales: 31200, orders: 16 },
+    { date: '24 Oct', sales: 38900, orders: 20 },
+    { date: '25 Oct', sales: 34500, orders: 18 },
+    { date: '26 Oct', sales: 21000, orders: 11 },
+    { date: '27 Oct', sales: 27800, orders: 14 },
+    { date: '28 Oct', sales: 33400, orders: 17 },
+    { date: '29 Oct', sales: 29800, orders: 15 },
+    { date: '30 Oct', sales: 42100, orders: 22 },
+    { date: '31 Oct', sales: 49500, orders: 26 },
+    { date: '01 Nov', sales: 24500, orders: 14 }
   ],
-  paymentBreakdown: [
-    { name: 'UPI / QR', value: 58 },
-    { name: 'Cash', value: 26 },
-    { name: 'Credit/Debit Card', value: 16 }
+  categoryBreakdown: [
+    { name: 'Beverages', value: 171900 },
+    { name: 'Organic Grocery', value: 124500 },
+    { name: 'Electronics & POS', value: 86000 }
   ],
-  categoryShare: [
-    { name: 'Beverages', value: 45 },
-    { name: 'Organic Foods', value: 30 },
-    { name: 'Oils & Ghee', value: 25 }
+  revenueVsExpenses: [
+    { month: 'Jun 26', revenue: 295000, expenses: 38000 },
+    { month: 'Jul 26', revenue: 312000, expenses: 41000 },
+    { month: 'Aug 26', revenue: 348000, expenses: 39500 },
+    { month: 'Sep 26', revenue: 362000, expenses: 44000 },
+    { month: 'Oct 26', revenue: 395000, expenses: 46200 },
+    { month: 'Nov 26', revenue: 382400, expenses: 42800 }
   ]
 };
 
@@ -91,30 +104,33 @@ const REAL_USER_ZERO_SUMMARY = {
   todaySalesAmount: 0,
   todaySalesCount: 0,
   monthlyRevenue: 0,
-  monthlyNetProfit: 0,
+  monthlySalesCount: 0,
+  monthlyExpenses: 0,
+  estimatedProfit: 0,
   profitMargin: '0.0',
   totalInventoryValuation: 0,
-  lowStockItemsCount: 0,
+  lowStockCount: 0,
   outOfStockItemsCount: 0,
   totalProductsCount: 0,
-  pendingDuesAmount: 0,
+  pendingPaymentsTotal: 0,
+  pendingCustomersCount: 0,
   topSellingProducts: [],
   recentSales: [],
-  lowStockAlerts: []
+  lowStockList: []
 };
 
 const REAL_USER_ZERO_CHARTS = {
-  weeklyRevenue: [
-    { day: 'Mon', revenue: 0, bills: 0 },
-    { day: 'Tue', revenue: 0, bills: 0 },
-    { day: 'Wed', revenue: 0, bills: 0 },
-    { day: 'Thu', revenue: 0, bills: 0 },
-    { day: 'Fri', revenue: 0, bills: 0 },
-    { day: 'Sat', revenue: 0, bills: 0 },
-    { day: 'Sun', revenue: 0, bills: 0 }
+  salesTrend: [
+    { date: 'Mon', sales: 0, orders: 0 },
+    { date: 'Tue', sales: 0, orders: 0 },
+    { date: 'Wed', sales: 0, orders: 0 },
+    { date: 'Thu', sales: 0, orders: 0 },
+    { date: 'Fri', sales: 0, orders: 0 },
+    { date: 'Sat', sales: 0, orders: 0 },
+    { date: 'Sun', sales: 0, orders: 0 }
   ],
-  paymentBreakdown: [],
-  categoryShare: []
+  categoryBreakdown: [],
+  revenueVsExpenses: []
 };
 
 const Dashboard = () => {
