@@ -4,7 +4,7 @@ class EmployeeController {
   // Employees
   async getEmployees(req, res, next) {
     try {
-      const employees = await employeeService.getEmployees(req.query);
+      const employees = await employeeService.getEmployees(req.query, req.user);
       res.status(200).json({ success: true, data: employees });
     } catch (error) {
       next(error);

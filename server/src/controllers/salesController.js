@@ -22,7 +22,7 @@ class SalesController {
 
   async getSales(req, res, next) {
     try {
-      const result = await salesService.getSales(req.query);
+      const result = await salesService.getSales(req.query, req.user);
       res.status(200).json({ success: true, data: result.sales, pagination: result.pagination });
     } catch (error) {
       next(error);

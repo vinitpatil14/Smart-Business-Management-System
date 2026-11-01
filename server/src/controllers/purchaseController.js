@@ -4,7 +4,7 @@ class PurchaseController {
   // Suppliers
   async getSuppliers(req, res, next) {
     try {
-      const suppliers = await purchaseService.getSuppliers(req.query);
+      const suppliers = await purchaseService.getSuppliers(req.query, req.user);
       res.status(200).json({ success: true, data: suppliers });
     } catch (error) {
       next(error);
@@ -62,7 +62,7 @@ class PurchaseController {
 
   async getPurchases(req, res, next) {
     try {
-      const result = await purchaseService.getPurchases(req.query);
+      const result = await purchaseService.getPurchases(req.query, req.user);
       res.status(200).json({ success: true, data: result.purchases, pagination: result.pagination });
     } catch (error) {
       next(error);

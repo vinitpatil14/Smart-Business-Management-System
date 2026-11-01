@@ -1,8 +1,10 @@
 const prisma = require('../config/db');
+const { isDemoUser } = require('../utils/userScope');
 
 class InventoryService {
   // --- Products ---
-  async getProducts({ page = 1, limit = 10, search = '', categoryId, lowStockOnly = false, showArchived = false }) {
+  async getProducts({ page = 1, limit = 10, search = '', categoryId, lowStockOnly = false, showArchived = false }, user) {
+    const isDemo = isDemoUser(user);
     const skip = (Number(page) - 1) * Number(limit);
     const take = Number(limit);
 
@@ -11,6 +13,12 @@ class InventoryService {
       where.isArchived = true;
     } else {
       where.isArchived = false;
+    }
+
+    // Scoping: Demo users see the demo catalog.
+    // Real users start with a fresh slate (only products added beyond demo set, starting at 0).
+    if (!isDemo) {
+      where.id = { gt: 11 };
     }
 
     if (search) {

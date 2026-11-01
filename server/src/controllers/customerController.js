@@ -3,7 +3,7 @@ const customerService = require('../services/customerService');
 class CustomerController {
   async getCustomers(req, res, next) {
     try {
-      const result = await customerService.getCustomers(req.query);
+      const result = await customerService.getCustomers(req.query, req.user);
       res.status(200).json({ success: true, data: result.customers, pagination: result.pagination });
     } catch (error) {
       next(error);
@@ -12,7 +12,7 @@ class CustomerController {
 
   async getAllCustomersList(req, res, next) {
     try {
-      const customers = await customerService.getAllCustomersList();
+      const customers = await customerService.getAllCustomersList(req.user);
       res.status(200).json({ success: true, data: customers });
     } catch (error) {
       next(error);

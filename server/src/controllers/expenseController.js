@@ -3,7 +3,7 @@ const expenseService = require('../services/expenseService');
 class ExpenseController {
   async getExpenses(req, res, next) {
     try {
-      const result = await expenseService.getExpenses(req.query);
+      const result = await expenseService.getExpenses(req.query, req.user);
       res.status(200).json({ success: true, data: result.expenses, pagination: result.pagination });
     } catch (error) {
       next(error);
@@ -12,7 +12,7 @@ class ExpenseController {
 
   async getSummary(req, res, next) {
     try {
-      const summary = await expenseService.getSummary();
+      const summary = await expenseService.getSummary(req.user);
       res.status(200).json({ success: true, data: summary });
     } catch (error) {
       next(error);

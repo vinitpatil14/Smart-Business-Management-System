@@ -1,4 +1,5 @@
 const prisma = require('../config/db');
+const { isDemoUser } = require('../utils/userScope');
 
 class SalesService {
   async createSale({
@@ -154,11 +155,15 @@ class SalesService {
     });
   }
 
-  async getSales({ page = 1, limit = 10, search = '', paymentStatus, startDate, endDate }) {
+  async getSales({ page = 1, limit = 10, search = '', paymentStatus, startDate, endDate }, user) {
+    const isDemo = isDemoUser(user);
     const skip = (Number(page) - 1) * Number(limit);
     const take = Number(limit);
 
     const where = {};
+    if (!isDemo) {
+      where.createdByUserId = user?.id || -1;
+    }
     if (search) {
       where.OR = [
         { invoiceNumber: { contains: search } },

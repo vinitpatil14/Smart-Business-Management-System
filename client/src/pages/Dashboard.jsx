@@ -99,9 +99,20 @@ const Dashboard = () => {
       {/* Top Banner / Welcome */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm">
         <div>
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
-            Business Executive Overview
-          </h1>
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
+              Business Executive Overview
+            </h1>
+            {summary?.isDemo ? (
+              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
+                ✨ Demo Showroom (Sample Data)
+              </span>
+            ) : (
+              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+                🚀 Live Workspace (Fresh Zero State)
+              </span>
+            )}
+          </div>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
             Real-time telemetry, revenue figures, inventory health & operations
           </p>
@@ -146,6 +157,37 @@ const Dashboard = () => {
         }`}>
           {syncStatus.success ? <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" /> : <AlertTriangle className="w-4 h-4 text-rose-600 flex-shrink-0" />}
           <span>{syncStatus.message}</span>
+        </div>
+      )}
+
+      {/* Fresh Business Workspace Welcome (Zero State) */}
+      {!summary?.isDemo && summary?.totalProductsCount === 0 && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-emerald-500/10 border border-indigo-200/80 dark:border-indigo-900/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg flex-shrink-0 shadow-sm">
+              🌱
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white">Your Business Workspace is Fresh & Ready!</h4>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                All numbers start cleanly at zero. Add your first inventory product or create your first bill to see your metrics grow.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={() => navigate('/inventory')}
+              className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm transition"
+            >
+              + Add First Product
+            </button>
+            <button
+              onClick={() => navigate('/sales')}
+              className="px-3.5 py-1.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 hover:bg-gray-50 text-gray-700 dark:text-gray-200 text-xs font-semibold shadow-sm transition"
+            >
+              Open POS
+            </button>
+          </div>
         </div>
       )}
 

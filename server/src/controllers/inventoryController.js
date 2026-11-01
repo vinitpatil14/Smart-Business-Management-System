@@ -4,7 +4,7 @@ class InventoryController {
   // Products
   async getProducts(req, res, next) {
     try {
-      const result = await inventoryService.getProducts(req.query);
+      const result = await inventoryService.getProducts(req.query, req.user);
       res.status(200).json({ success: true, data: result.products, pagination: result.pagination });
     } catch (error) {
       next(error);

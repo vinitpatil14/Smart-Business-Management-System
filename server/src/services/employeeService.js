@@ -1,8 +1,13 @@
 const prisma = require('../config/db');
+const { isDemoUser } = require('../utils/userScope');
 
 class EmployeeService {
-  async getEmployees({ search = '', department = '', status = '' }) {
+  async getEmployees({ search = '', department = '', status = '' }, user) {
+    const isDemo = isDemoUser(user);
     const where = {};
+    if (!isDemo) {
+      where.id = { gt: 4 };
+    }
     if (search) {
       where.OR = [
         { name: { contains: search } },

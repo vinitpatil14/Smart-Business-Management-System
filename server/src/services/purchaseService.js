@@ -1,9 +1,14 @@
 const prisma = require('../config/db');
+const { isDemoUser } = require('../utils/userScope');
 
 class PurchaseService {
   // --- Suppliers ---
-  async getSuppliers({ search = '' } = {}) {
+  async getSuppliers({ search = '' } = {}, user) {
+    const isDemo = isDemoUser(user);
     const where = {};
+    if (!isDemo) {
+      where.id = { gt: 4 };
+    }
     if (search) {
       where.OR = [
         { name: { contains: search } },
@@ -183,11 +188,15 @@ class PurchaseService {
     });
   }
 
-  async getPurchases({ page = 1, limit = 10, search = '', supplierId }) {
+  async getPurchases({ page = 1, limit = 10, search = '', supplierId }, user) {
+    const isDemo = isDemoUser(user);
     const skip = (Number(page) - 1) * Number(limit);
     const take = Number(limit);
 
     const where = {};
+    if (!isDemo) {
+      where.id = { gt: 3 };
+    }
     if (search) {
       where.OR = [
         { purchaseNumber: { contains: search } },

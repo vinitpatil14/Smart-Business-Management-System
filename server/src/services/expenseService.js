@@ -1,11 +1,16 @@
 const prisma = require('../config/db');
+const { isDemoUser } = require('../utils/userScope');
 
 class ExpenseService {
-  async getExpenses({ page = 1, limit = 10, category, startDate, endDate }) {
+  async getExpenses({ page = 1, limit = 10, category, startDate, endDate }, user) {
+    const isDemo = isDemoUser(user);
     const skip = (Number(page) - 1) * Number(limit);
     const take = Number(limit);
 
     const where = {};
+    if (!isDemo) {
+      where.recordedByUserId = user?.id || -1;
+    }
     if (category) {
       where.category = category;
     }
@@ -43,19 +48,26 @@ class ExpenseService {
     };
   }
 
-  async getSummary() {
+  async getSummary(user) {
+    const isDemo = isDemoUser(user);
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
 
+    const baseWhere = !isDemo ? { recordedByUserId: user?.id || -1 } : {};
+    const monthWhere = !isDemo
+      ? { recordedByUserId: user?.id || -1, date: { gte: startOfMonth } }
+      : { date: { gte: startOfMonth } };
+
     const [allTimeSum, monthSum, byCategory] = await Promise.all([
-      prisma.expense.aggregate({ _sum: { amount: true } }),
+      prisma.expense.aggregate({ where: baseWhere, _sum: { amount: true } }),
       prisma.expense.aggregate({
-        where: { date: { gte: startOfMonth } },
+        where: monthWhere,
         _sum: { amount: true },
         _count: { id: true }
       }),
       prisma.expense.groupBy({
         by: ['category'],
+        where: baseWhere,
         _sum: { amount: true },
         _count: { id: true }
       })

@@ -1,16 +1,26 @@
 const prisma = require('../config/db');
+const { isDemoUser } = require('../utils/userScope');
 
 class CustomerService {
-  async getCustomers({ page = 1, limit = 10, search = '' }) {
+  async getCustomers({ page = 1, limit = 10, search = '' }, user) {
+    const isDemo = isDemoUser(user);
     const skip = (Number(page) - 1) * Number(limit);
     const take = Number(limit);
 
     const where = {};
+    if (!isDemo) {
+      where.id = { gt: 6 };
+    }
+
     if (search) {
-      where.OR = [
-        { name: { contains: search } },
-        { phone: { contains: search } },
-        { email: { contains: search } }
+      where.AND = [
+        {
+          OR: [
+            { name: { contains: search } },
+            { phone: { contains: search } },
+            { email: { contains: search } }
+          ]
+        }
       ];
     }
 
@@ -38,9 +48,12 @@ class CustomerService {
     };
   }
 
-  async getAllCustomersList() {
+  async getAllCustomersList(user) {
+    const isDemo = isDemoUser(user);
+    const where = !isDemo ? { id: { gt: 6 } } : {};
     // Lightweight list for POS dropdowns
     return prisma.customer.findMany({
+      where,
       select: { id: true, name: true, phone: true, loyaltyPoints: true, outstandingBalance: true },
       orderBy: { name: 'asc' }
     });
