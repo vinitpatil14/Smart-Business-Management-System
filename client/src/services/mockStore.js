@@ -1,7 +1,7 @@
 /**
  * NexPulse Business OS - Client-Side Mock Data & Engine
  * Provides persistent offline & serverless storage for Vercel / Static Deployments
- * Supports full CRUD: POS Sales, Invoices, Inventory, Customers, Expenses, Purchases, Reports, Insights.
+ * Supports full CRUD: POS Sales, Invoices, Inventory, Customers, Expenses, Purchases, Employees, Attendance, Payroll, Reports, Insights.
  */
 
 const getStoredUser = () => {
@@ -52,15 +52,16 @@ const INITIAL_DEMO_SUPPLIERS = [
 ];
 
 const INITIAL_DEMO_EMPLOYEES = [
-  { id: 1, name: 'Vinit Patil', email: 'vinit@sbms.com', phone: '9876501234', role: 'MANAGER', department: 'Operations', salary: 45000, joinDate: '2025-01-15', isActive: true },
-  { id: 2, name: 'Rajesh Pawar', email: 'rajesh@sbms.com', phone: '9876505678', role: 'STAFF', department: 'Sales POS', salary: 22000, joinDate: '2025-03-01', isActive: true },
-  { id: 3, name: 'Snehal Shinde', email: 'snehal@sbms.com', phone: '9876509012', role: 'STAFF', department: 'Inventory', salary: 20000, joinDate: '2025-04-10', isActive: true }
+  { id: 1, name: 'Vinit Patil', email: 'vinit@sbms.com', phone: '9876501234', designation: 'Operations Manager', department: 'Operations', baseSalary: 45000, status: 'ACTIVE' },
+  { id: 2, name: 'Rajesh Pawar', email: 'rajesh@sbms.com', phone: '9876505678', designation: 'Lead Cashier', department: 'Sales & POS', baseSalary: 22000, status: 'ACTIVE' },
+  { id: 3, name: 'Snehal Shinde', email: 'snehal@sbms.com', phone: '9876509012', designation: 'Inventory Officer', department: 'Warehouse', baseSalary: 20000, status: 'ACTIVE' }
 ];
 
 const INITIAL_DEMO_EXPENSES = [
-  { id: 1, title: 'Store Monthly Electricity Bill', amount: 4850, category: 'Utilities', date: new Date().toISOString(), paymentMethod: 'UPI', notes: 'MSEDCL commercial bill' },
-  { id: 2, title: 'High Speed Optical Fiber Internet', amount: 1499, category: 'Utilities', date: new Date(Date.now() - 86400000).toISOString(), paymentMethod: 'ONLINE', notes: 'Airtel broadband' },
-  { id: 3, title: 'Store Deep Cleaning & Packaging Bags', amount: 1850, category: 'Supplies', date: new Date(Date.now() - 172800000).toISOString(), paymentMethod: 'CASH', notes: 'Monthly hygiene materials' }
+  { id: 1, title: 'Store Monthly Electricity Bill', amount: 4850, category: 'UTILITIES', date: new Date().toISOString().slice(0, 10), paymentMode: 'UPI', notes: 'MSEDCL commercial bill', recordedByUser: { name: 'Demo Administrator' } },
+  { id: 2, title: 'High Speed Optical Fiber Internet', amount: 1499, category: 'UTILITIES', date: new Date(Date.now() - 86400000).toISOString().slice(0, 10), paymentMode: 'ONLINE', notes: 'Airtel broadband', recordedByUser: { name: 'Demo Administrator' } },
+  { id: 3, title: 'Store Deep Cleaning & Packaging Bags', amount: 1850, category: 'SUPPLIES', date: new Date(Date.now() - 172800000).toISOString().slice(0, 10), paymentMode: 'CASH', notes: 'Monthly hygiene materials', recordedByUser: { name: 'Demo Operations Manager' } },
+  { id: 4, title: 'Quarterly Air Conditioner Maintenance', amount: 2400, category: 'MAINTENANCE', date: new Date(Date.now() - 259200000).toISOString().slice(0, 10), paymentMode: 'CASH', notes: 'AC filter wash & gas top-up', recordedByUser: { name: 'Demo Operations Manager' } }
 ];
 
 const INITIAL_DEMO_PURCHASES = [
@@ -540,23 +541,39 @@ class MockStore {
     // 6. EXPENSES
     if (url.startsWith('/expenses')) {
       let expenses = this.getItem('expenses', INITIAL_DEMO_EXPENSES);
+
       if (url === '/expenses/summary') {
         const total = expenses.reduce((acc, e) => acc + Number(e.amount || 0), 0);
+        const catMap = {};
+        for (const exp of expenses) {
+          const cat = exp.category || 'OTHER';
+          catMap[cat] = (catMap[cat] || 0) + Number(exp.amount || 0);
+        }
+        const byCategory = Object.entries(catMap).map(([category, total]) => ({ category, total }));
+
         return {
           success: true,
           data: {
-            totalExpenses: total,
-            thisMonth: total,
-            categorySummary: [
-              { category: 'Utilities', _sum: { amount: 6349 } },
-              { category: 'Supplies', _sum: { amount: 1850 } }
+            currentMonthAmount: total,
+            currentMonthCount: expenses.length,
+            totalAmount: total,
+            byCategory: byCategory.length > 0 ? byCategory : [
+              { category: 'UTILITIES', total: 6349 },
+              { category: 'SUPPLIES', total: 1850 },
+              { category: 'MAINTENANCE', total: 2400 }
             ]
           }
         };
       }
+
       if (method === 'get') {
-        return { success: true, data: expenses, pagination: { total: expenses.length, page: 1, limit: 50, totalPages: 1 } };
+        let filtered = [...expenses];
+        if (config.params?.category) {
+          filtered = filtered.filter(e => e.category === config.params.category);
+        }
+        return { success: true, data: filtered, pagination: { total: filtered.length, page: 1, limit: 50, totalPages: 1 } };
       }
+
       if (method === 'post') {
         let body = {};
         try { body = typeof config.data === 'string' ? JSON.parse(config.data) : config.data; } catch {}
@@ -564,15 +581,27 @@ class MockStore {
           id: Date.now(),
           title: body.title || 'Expense',
           amount: Number(body.amount || 0),
-          category: body.category || 'General',
-          date: body.date || new Date().toISOString(),
-          paymentMethod: body.paymentMethod || 'UPI',
-          notes: body.notes || ''
+          category: body.category || 'UTILITIES',
+          date: body.date || new Date().toISOString().slice(0, 10),
+          paymentMode: body.paymentMode || 'CASH',
+          notes: body.notes || '',
+          recordedByUser: { name: getStoredUser()?.name || 'Manager' }
         };
         expenses.unshift(newExp);
         this.setItem('expenses', expenses);
         return { success: true, data: newExp };
       }
+
+      if (method === 'put') {
+        const match = url.match(/\/expenses\/(\d+)/);
+        const expId = match ? Number(match[1]) : 0;
+        let body = {};
+        try { body = typeof config.data === 'string' ? JSON.parse(config.data) : config.data; } catch {}
+        expenses = expenses.map(e => e.id === expId ? { ...e, ...body, id: expId } : e);
+        this.setItem('expenses', expenses);
+        return { success: true, data: expenses.find(e => e.id === expId) };
+      }
+
       if (method === 'delete') {
         const match = url.match(/\/expenses\/(\d+)/);
         const expId = match ? Number(match[1]) : 0;
@@ -629,13 +658,104 @@ class MockStore {
     // 8. EMPLOYEES & PAYROLL
     if (url.startsWith('/employees')) {
       let employees = this.getItem('employees', INITIAL_DEMO_EMPLOYEES);
+
+      // Attendance
       if (url === '/employees/attendance') {
-        return { success: true, data: employees.map(e => ({ id: e.id, employeeId: e.id, employee: e, status: 'PRESENT', date: new Date().toISOString() })) };
+        const attDate = config.params?.date || new Date().toISOString().slice(0, 10);
+        let attendanceStore = this.getItem('attendance_records', {});
+
+        if (method === 'post') {
+          let body = {};
+          try { body = typeof config.data === 'string' ? JSON.parse(config.data) : config.data; } catch {}
+          const dateKey = body.date || attDate;
+          if (!attendanceStore[dateKey]) attendanceStore[dateKey] = {};
+          attendanceStore[dateKey][body.employeeId] = body.status || 'PRESENT';
+          this.setItem('attendance_records', attendanceStore);
+          return { success: true, message: 'Attendance marked successfully' };
+        }
+
+        // Return attendance list for that date
+        const dateRecord = attendanceStore[attDate] || {};
+        const attendanceList = employees.map(emp => ({
+          id: emp.id,
+          employeeId: emp.id,
+          name: emp.name,
+          department: emp.department || 'Operations',
+          designation: emp.designation || 'Staff',
+          status: dateRecord[emp.id] || 'PRESENT',
+          date: attDate
+        }));
+        return { success: true, data: attendanceList };
       }
+
+      // Payroll Calculator
       if (url === '/employees/payroll') {
-        return { success: true, data: employees.map(e => ({ id: e.id, employeeId: e.id, employee: e, basicSalary: e.salary, netSalary: e.salary, status: 'PAID' })) };
+        const payrollItems = employees.map(emp => {
+          const base = Number(emp.baseSalary || 20000);
+          return {
+            employeeId: emp.id,
+            name: emp.name,
+            designation: emp.designation || 'Staff',
+            baseSalary: base,
+            presentDays: 24,
+            halfDays: 1,
+            leaveDays: 1,
+            payableDays: 24.5,
+            totalMonthDays: 26,
+            netSalary: Math.round((base / 26) * 24.5)
+          };
+        });
+        const totalOutflow = payrollItems.reduce((acc, p) => acc + p.netSalary, 0);
+
+        return {
+          success: true,
+          data: {
+            totalPayrollExpense: totalOutflow,
+            payroll: payrollItems
+          }
+        };
       }
-      return { success: true, data: employees };
+
+      // Employees CRUD
+      if (method === 'get') {
+        return { success: true, data: employees };
+      }
+
+      if (method === 'post') {
+        let body = {};
+        try { body = typeof config.data === 'string' ? JSON.parse(config.data) : config.data; } catch {}
+        const newEmp = {
+          id: Date.now(),
+          name: body.name || 'New Staff',
+          email: body.email || '',
+          phone: body.phone || '',
+          designation: body.designation || 'Staff',
+          department: body.department || 'Sales',
+          baseSalary: Number(body.baseSalary || 20000),
+          status: body.status || 'ACTIVE'
+        };
+        employees.push(newEmp);
+        this.setItem('employees', employees);
+        return { success: true, data: newEmp };
+      }
+
+      if (method === 'put') {
+        const match = url.match(/\/employees\/(\d+)/);
+        const empId = match ? Number(match[1]) : 0;
+        let body = {};
+        try { body = typeof config.data === 'string' ? JSON.parse(config.data) : config.data; } catch {}
+        employees = employees.map(e => e.id === empId ? { ...e, ...body, id: empId } : e);
+        this.setItem('employees', employees);
+        return { success: true, data: employees.find(e => e.id === empId) };
+      }
+
+      if (method === 'delete') {
+        const match = url.match(/\/employees\/(\d+)/);
+        const empId = match ? Number(match[1]) : 0;
+        employees = employees.filter(e => e.id !== empId);
+        this.setItem('employees', employees);
+        return { success: true, message: 'Employee deleted' };
+      }
     }
 
     // 9. SMART INSIGHTS
