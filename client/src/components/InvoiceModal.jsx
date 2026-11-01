@@ -104,7 +104,7 @@ const InvoiceModal = ({ isOpen, onClose, sale }) => {
 
         {/* Items Table */}
         <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full text-left text-xs min-w-[450px]">
             <thead>
               <tr className="border-b border-gray-200 dark:border-slate-700 text-gray-500 dark:text-gray-400 uppercase font-semibold">
                 <th className="py-2.5">#</th>
