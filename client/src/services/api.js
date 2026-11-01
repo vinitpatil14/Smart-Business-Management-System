@@ -19,18 +19,10 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor: handle 401 unauthorized
+// Response interceptor: handle errors without aggressive hard reloads
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      // Clear token if expired/invalid and redirect if not already on login
-      if (window.location.pathname !== '/login') {
-        localStorage.removeItem('sbms_token');
-        localStorage.removeItem('sbms_user');
-        window.location.href = '/login';
-      }
-    }
     return Promise.reject(error);
   }
 );

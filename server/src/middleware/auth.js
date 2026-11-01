@@ -11,12 +11,41 @@ const authenticate = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, JWT_SECRET);
+    let user = null;
 
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
-      select: { id: true, name: true, email: true, role: true, phone: true, status: true }
-    });
+    // 1. Try local backend JWT verification
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      user = await prisma.user.findUnique({
+        where: { id: decoded.id },
+        select: { id: true, name: true, email: true, role: true, phone: true, status: true }
+      });
+    } catch (jwtErr) {
+      // 2. Check if token is a valid Firebase ID token
+      const decodedFb = jwt.decode(token);
+      if (decodedFb && decodedFb.email) {
+        user = await prisma.user.findUnique({
+          where: { email: decodedFb.email },
+          select: { id: true, name: true, email: true, role: true, phone: true, status: true }
+        });
+
+        // Auto-provision local user profile for new Firebase user
+        if (!user) {
+          user = await prisma.user.create({
+            data: {
+              name: decodedFb.name || decodedFb.email.split('@')[0],
+              email: decodedFb.email,
+              password: 'FIREBASE_AUTH_MANAGED',
+              role: 'ADMIN',
+              status: 'ACTIVE'
+            },
+            select: { id: true, name: true, email: true, role: true, phone: true, status: true }
+          });
+        }
+      } else {
+        throw jwtErr;
+      }
+    }
 
     if (!user) {
       return res.status(401).json({ success: false, message: 'User not found or deleted.' });

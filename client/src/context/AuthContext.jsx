@@ -52,6 +52,13 @@ export const AuthProvider = ({ children }) => {
           setUser(fallbackUser);
           localStorage.setItem('sbms_user', JSON.stringify(fallbackUser));
         }
+      } else {
+        // If not authenticated in Firebase and no local token exists
+        const storedToken = localStorage.getItem('sbms_token');
+        if (!storedToken) {
+          setUser(null);
+          localStorage.removeItem('sbms_user');
+        }
       }
       setLoading(false);
     });

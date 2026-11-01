@@ -16,16 +16,16 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  const { user, login, signup, loginWithGoogle } = useAuth();
+  const { user, loading: authLoading, login, signup, loginWithGoogle } = useAuth();
   const { theme } = useTheme();
   const navigate = useNavigate();
 
   // If already logged in, redirect directly to dashboard
   React.useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
+    if (!authLoading && user) {
+      navigate('/dashboard', { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,10 +37,10 @@ const Login = () => {
       if (isRegister) {
         await signup(email, password, name, role);
         setSuccessMsg('Account created successfully in Firebase! Redirecting...');
-        navigate('/dashboard');
+        navigate('/dashboard', { replace: true });
       } else {
         await login(email, password);
-        navigate('/dashboard');
+        navigate('/dashboard', { replace: true });
       }
     } catch (err) {
       setError(err.message || 'Authentication failed. Please try again.');
@@ -54,7 +54,7 @@ const Login = () => {
     setGoogleLoading(true);
     try {
       await loginWithGoogle();
-      navigate('/dashboard');
+      navigate('/dashboard', { replace: true });
     } catch (err) {
       setError(err.message || 'Google sign-in failed.');
     } finally {
