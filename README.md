@@ -1,221 +1,240 @@
-# 🚀 Smart Business Management System (SBMS)
+<div align="center">
 
-A modern, production-grade, full-stack web application designed for small and medium businesses (retail shops, wholesale distributors, service agencies).
+  <img src="docs/hero-banner.svg" alt="NexPulse Business OS Banner" width="100%" />
 
-Built with **React**, **Vite**, **Tailwind CSS**, **Node.js**, **Express**, **Prisma ORM**, **SQLite** (switchable to PostgreSQL), and **Recharts**.
+  <br />
+  <br />
 
----
+  [![GitHub Repo stars](https://img.shields.io/github/stars/vinitpatil14/Smart-Business-Management-System?style=for-the-badge&color=6366f1)](https://github.com/vinitpatil14/Smart-Business-Management-System)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+  [![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+  [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+  [![Prisma](https://img.shields.io/badge/Prisma_ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+  [![Firebase](https://img.shields.io/badge/Firebase_Auth_&_Firestore-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-## 📸 Key Modules & Features
+  <p align="center">
+    <b>A high-performance, full-stack Business Operating System engineered for retailers, distributors, wholesalers, and modern SMEs.</b>
+    <br />
+    <i>Featuring Point-of-Sale (POS), Predictive Stock Telemetry, CRM, Payroll, Cloud Firestore sync, and Dual-Mode Data Isolation.</i>
+  </p>
 
-1. **Authentication & Roles (RBAC)**:
-   - JWT-based authentication with role-based permissions (`ADMIN`, `MANAGER`, `STAFF`).
-   - Admin user management: create staff logins, modify permissions, toggle active status.
-   - Demo one-click account selector on the login screen.
-
-2. **Executive Dashboard**:
-   - Live metrics: Today's Sales, Monthly Revenue, Net Profit (after COGS & expenses), Pending Customer Dues.
-   - **Recharts Line Chart**: 14-day daily sales trend.
-   - **Recharts Bar Chart**: Monthly Revenue vs Overhead Expenses.
-   - **Recharts Pie Chart**: Category sales distribution.
-   - Real-time low-stock alerts & top-selling fast mover rankings.
-
-3. **Inventory Management**:
-   - Full Product CRUD with SKU, Barcode/EAN, Category, Unit, Cost Price, Selling Price.
-   - Real-time stock quantity tracking with customizable reorder alert threshold.
-   - Catalog Category management with live item counts.
-   - Search by product name, SKU, or barcode; filter by category or low-stock.
-
-4. **Sales & Point of Sale (POS)**:
-   - Interactive POS billing terminal with catalog browsing and category chips.
-   - Instant cart with quantity adjusters and stock limit guards.
-   - Customer loyalty lookup and quick customer registration modal.
-   - GST tax calculation (0%, 5%, 12%, 18%, 28%) and custom discounts.
-   - Payment modes: `CASH`, `UPI`, `CARD`, `CREDIT`.
-   - **Automatic Stock Deduction** inside atomic database transactions.
-   - Printable retail tax invoice preview with print/PDF export.
-   - Invoices history with balance due collection modal.
-
-5. **Purchases & Suppliers**:
-   - Supplier directory with contact info, GSTIN, and balance due tracking.
-   - Purchase order creation that **automatically increases warehouse product stock**.
-   - Supplier payment settlement modal to reduce outstanding balance.
-
-6. **Customer CRM & Loyalty**:
-   - Customer directory with search, phone, email, address, and outstanding balance.
-   - Automated loyalty points reward engine (1 point earned per ₹100 spent).
-   - Customer purchase ledger modal displaying full past invoice history.
-
-7. **Expense Tracking**:
-   - Record overhead expenditures by category (`RENT`, `UTILITIES`, `SALARY`, `MAINTENANCE`, `SUPPLIES`, `MARKETING`, `OTHER`).
-   - Monthly expense summaries and top overhead category analytics.
-
-8. **Employee Management & Payroll**:
-   - Employee records across Sales, Logistics, Finance, and Support.
-   - Daily attendance tracker (`PRESENT`, `HALF_DAY`, `LEAVE`, `ABSENT`).
-   - Automatic monthly payroll calculator based on working days and attendance.
-
-9. **Reports & Analytics**:
-   - Daily, weekly, monthly, and yearly sales reports.
-   - **Profit & Loss Statement (P&L)**: Revenue − COGS − Operating Expenses = Net Profit.
-   - Stock valuation report at cost price and retail price with potential gross margin.
-   - Customer dues and aging receivables ledger.
-   - **One-click CSV export** for all reports.
-
-10. **Smart Predictive Features**:
-    - **Stockout Predictor**: Computes daily burn-rate based on recent sales trends, estimates days of remaining inventory, risk level, and calculates recommended reorder quantities.
-    - **Catalog Velocity & Dead Stock**: Identifies best-sellers, high-margin items, and highlights dormant dead stock with tied-up capital.
-    - **Automated Payment Reminders**: Analyzes overdue customer credit aging and generates personalized polite reminder templates ready for WhatsApp/SMS copy.
+  <p align="center">
+    <a href="#-key-features">Key Features</a> •
+    <a href="#-visual-showcase">Visual Tour</a> •
+    <a href="#-architecture--dual-mode">Dual-Mode Architecture</a> •
+    <a href="#-quick-start">Quick Start</a> •
+    <a href="#-demo-credentials">Demo Accounts</a> •
+    <a href="#-api-endpoints">API Docs</a>
+  </p>
+</div>
 
 ---
 
-## 🛠️ Tech Stack
+## 🌟 Executive Overview
 
-| Layer | Technologies |
-|---|---|
-| **Frontend** | React 18, Vite, Tailwind CSS, Lucide React, Recharts, Axios, React Router v6 |
-| **Backend** | Node.js, Express.js, REST API, JSON Web Tokens (JWT), Bcrypt.js, Morgan |
-| **Database** | SQLite (development) with Prisma ORM (seamlessly switchable to PostgreSQL) |
+**NexPulse Business OS** (Smart Business Management System) solves the fragmentation faced by growing businesses. Rather than juggling disparate tools for billing, inventory, payroll, and reporting, NexPulse consolidates the entire business lifecycle into a single, unified command center.
+
+Built with a **React 18 + Vite** frontend, a high-throughput **Node.js Express REST API**, **Prisma ORM**, and integrated with **Firebase Authentication & Cloud Firestore**, NexPulse provides both local-first offline reliability and scalable cloud sync.
 
 ---
 
-## 🚀 Quick Setup & Run Instructions
+## 📸 Visual Showcase
 
-### Prerequisites
-- Node.js (v18 or higher) & npm
+<div align="center">
+  <h3>✨ Modern Inventory Telemetry & Live Stock Health</h3>
+  <img src="docs/dashboard-preview.png" alt="NexPulse Inventory & Dashboard Screenshot" width="95%" style="border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);" />
+</div>
 
-### 1. Install Dependencies
-Run the following in the project root:
-```bash
-# Install root, backend and frontend dependencies
-npm run install:all
+---
+
+## ⚡ 10 Core Business Modules
+
+| # | Module | Key Capabilities |
+|---|--------|------------------|
+| 1 | **🔐 Auth & RBAC** | JWT & Firebase Auth (Google Sign-In + Email/Password). Role-Based Access: `ADMIN`, `MANAGER`, `STAFF`. |
+| 2 | **📊 Executive Dashboard** | Real-time KPIs: Today's sales, monthly revenue, estimated net profit, cash flow, Recharts analytics. |
+| 3 | **📦 Inventory Management** | Real-time stock counts, SKU/Barcode tracking, low-stock warnings, category filtering, safe soft-archiving & restore. |
+| 4 | **🧾 Sales & POS Billing** | Rapid barcode/product selection, dynamic GST/Tax & discounts, multi-payment options (Cash, UPI, Card, Credit), printable modal invoices. |
+| 5 | **🚚 Purchases & Suppliers** | Purchase Orders (PO) workflow, automated stock increments upon receiving, supplier ledger & dues tracking. |
+| 6 | **👥 CRM & Customers** | Customer directories, purchase history, loyalty points calculation, outstanding balance ledger, payment reminders. |
+| 7 | **💸 Expense Management** | Categorized expense entries (Rent, Salaries, Utilities, Supplies), monthly burn rate analytics, net profit deduction. |
+| 8 | **👔 Employee Management** | Staff directories, daily attendance log (Present, Absent, Leave, Half-Day), salary structure, HR reporting. |
+| 9 | **📈 Reports & Analytics** | Daily/Weekly/Monthly financial reconciliations, Stock valuations, Customer dues report, 1-click CSV export. |
+| 10 | **🧠 Smart AI Insights** | Restock forecast based on run rates, best/worst seller telemetry, automated customer payment recovery alerts. |
+
+---
+
+## 🚀 Dual-Mode Workspace Architecture
+
+NexPulse Business OS is engineered with an intelligent **dual-mode data isolation system**:
+
 ```
-*Or manually:*
-```bash
-cd server && npm install
-cd ../client && npm install
++-----------------------------------------------------------------------------------+
+|                            NexPulse Business OS Engine                            |
++-----------------------------------------------------------------------------------+
+                                         │
+                    ┌────────────────────┴────────────────────┐
+                    ▼                                         ▼
+   ✨ One-Click Demo Mode                    🚀 Live Business Mode
+   (admin@sbms.com / Staff / Mgr)            (Google Sign-In / User Registration)
+   ─────────────────────────────             ───────────────────────────────────
+   • Pre-filled showroom catalog             • 100% Clean Fresh Slate (All Zeros)
+   • 20+ realistic products & stock          • 0 Sales, 0 Products, 0 Dues
+   • 14-day simulated revenue charts         • Products added belong ONLY to user
+   • Full POS test invoices                  • Direct sync to Cloud Firestore
 ```
 
-### 2. Configure Environment Variables
-Copy `.env.example` in `server/`:
+- **One-Click Demo Mode**: Perfect for reviewers, clients, and testers to explore rich charts, invoice workflows, and stock warnings without entering setup data.
+- **Live User Workspace**: When a real user signs in via Google or creates an account, they get a **100% clean, zero-state workspace** (`₹0.00` sales, 0 products). All products, invoices, and customers created belong strictly to their business.
+
+---
+
+## 🛠️ Tech Stack & Architecture
+
+### **Frontend**
+- **Framework**: [React 18](https://react.dev/) + [Vite](https://vitejs.dev/) (Sub-second HMR)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with responsive Light & Dark modes
+- **State & Context**: Context API for Theme and Auth lifecycle
+- **Icons & Graphics**: [Lucide React](https://lucide.dev/)
+- **Charts**: [Recharts](https://recharts.org/) (Interactive Line, Bar, and Donut charts)
+- **Cloud Integration**: [Firebase Web SDK v10+](https://firebase.google.com/docs/web/setup)
+
+### **Backend & Cloud**
+- **Runtime**: [Node.js](https://nodejs.org/) LTS
+- **Framework**: [Express.js](https://expressjs.com/) with clean controller-service architecture
+- **ORM**: [Prisma ORM](https://www.prisma.io/) (Configured with SQLite for instant local dev; 1-click switch to PostgreSQL)
+- **Cloud Database**: [Google Cloud Firestore](https://firebase.google.com/docs/firestore) for live cloud data storage
+- **Security Rules**: Production-grade [`firestore.rules`](firestore.rules) enforcing RBAC permissions
+- **Authentication**: Hybrid JWT verification supporting both local sessions and Google/Firebase ID tokens
+
+---
+
+## 📦 Directory Structure
+
+```
+Smart-Business-Management-System/
+├── client/                     # Frontend Single Page App (React 18 + Vite)
+│   ├── public/                 # Static assets & browser favicon
+│   ├── src/
+│   │   ├── assets/             # Vector branding & logos
+│   │   ├── components/         # Reusable UI (Navbar, Sidebar, Modals, Tables)
+│   │   ├── context/            # AuthContext (Firebase + JWT) & ThemeContext
+│   │   ├── pages/              # 10 Application Modules & Dashboards
+│   │   └── services/           # Axios API client & Firebase / Firestore SDK
+│   ├── package.json
+│   └── vite.config.js
+│
+├── server/                     # Backend REST API (Node.js + Express)
+│   ├── prisma/
+│   │   ├── schema.prisma       # Database schema & relations
+│   │   └── seed.js             # Realistic enterprise seed generator
+│   ├── src/
+│   │   ├── config/             # Prisma client & database bindings
+│   │   ├── controllers/        # Express route controllers
+│   │   ├── middleware/         # Hybrid JWT & Firebase Auth verification
+│   │   ├── routes/             # Modular REST API endpoints
+│   │   ├── services/           # Business logic layer & data isolation
+│   │   ├── utils/              # User scoping & calculation helpers
+│   │   └── server.js           # Server bootstrap
+│   └── package.json
+│
+├── docs/                       # Project documentation & visual assets
+│   ├── hero-banner.svg
+│   └── dashboard-preview.png
+├── firestore.rules             # Production Cloud Firestore Security Rules
+├── firebase.json               # Firebase deployment configuration
+├── .gitignore                  # Security-first exclusions (db, keys, env)
+└── README.md
+```
+
+---
+
+## ⚡ Quick Start
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/vinitpatil14/Smart-Business-Management-System.git
+cd Smart-Business-Management-System
+```
+
+### 2. Backend Setup
 ```bash
 cd server
-copy .env.example .env
-```
-Default configuration is already set up for local development:
-```env
-PORT=5000
-NODE_ENV=development
-DATABASE_URL="file:./dev.db"
-JWT_SECRET=sbms_super_secret_jwt_key_2026_dev_env
-JWT_EXPIRES_IN=7d
-CORS_ORIGIN=http://localhost:5173
-```
+npm install
 
-### 3. Initialize & Seed Database
-From the root directory:
-```bash
-npm run setup:db
-```
-*Or from `server/`:*
-```bash
-cd server
+# Setup SQLite database and seed realistic demo records
 npx prisma generate
 npx prisma db push
 node prisma/seed.js
-```
-This generates the Prisma client, creates the SQLite database tables, and seeds realistic demo data across all modules (products, categories, sales, suppliers, purchases, expenses, employees, and users).
 
-### 4. Start the Application
-Open two terminal windows:
-
-**Terminal 1 (Backend API):**
-```bash
-cd server
+# Start backend development server
 npm run dev
-# Server starts on http://localhost:5000
+# Server will run on http://localhost:5000
 ```
 
-**Terminal 2 (Frontend Client):**
+### 3. Frontend Setup
+In a new terminal:
 ```bash
 cd client
-npm run dev
-# Client starts on http://localhost:5173
-```
+npm install
 
-Visit **http://localhost:5173** in your browser.
+# Start Vite dev server
+npm run dev
+# App will open at http://localhost:5173 (or 5174)
+```
 
 ---
 
-## 🔐 Default Demo Accounts
+## 🔑 One-Click Demo Credentials
+
+For instant evaluation, the login screen provides **One-Click Demo Login** buttons:
 
 | Role | Email | Password | Permissions |
-|---|---|---|---|
-| **Super Admin** | `admin@sbms.com` | `admin123` | Full access to all 10 modules, P&L reports, and User Management |
-| **Manager** | `manager@sbms.com` | `manager123` | Products, Purchases, Stock adjustments, CRM, Attendance & Payroll |
-| **Sales Staff** | `staff@sbms.com` | `staff123` | POS Billing, Invoicing, Customer lookup, Attendance marking |
+|------|-------|----------|-------------|
+| 👑 **Super Admin** | `admin@sbms.com` | `admin123` | Full access to all 10 modules, settings & users |
+| 💼 **Operations Manager** | `manager@sbms.com` | `manager123` | Inventory, Purchases, Suppliers & Expenses |
+| 🛍️ **Sales Staff** | `staff@sbms.com` | `staff123` | POS Billing, Invoices & Customer CRM |
 
-*Tip: The login page includes 1-click login buttons for instant testing!*
-
----
-
-## 🔄 Switching to PostgreSQL for Production
-
-To switch from SQLite to PostgreSQL:
-
-1. In `server/prisma/schema.prisma`, update the datasource:
-   ```prisma
-   datasource db {
-     provider = "postgresql"
-     url      = env("DATABASE_URL")
-   }
-   ```
-2. Update `server/.env` with your PostgreSQL connection string:
-   ```env
-   DATABASE_URL="postgresql://username:password@localhost:5432/sbms_prod?schema=public"
-   ```
-3. Run migrations:
-   ```bash
-   cd server
-   npx prisma migrate dev --name init
-   node prisma/seed.js
-   ```
+*(Or sign in with your own Google Account to experience the clean **Zero-State Live Workspace**!)*
 
 ---
 
-## 📁 Project Structure
+## 🌐 API Endpoints Reference
 
-```text
-d:\SBMS project\
-├── client\                  # Frontend React + Vite + Tailwind application
-│   ├── src\
-│   │   ├── components\      # Layout, Sidebar, Navbar, InvoiceModal, Modal, Pagination
-│   │   ├── context\         # AuthContext (JWT/RBAC), ThemeContext (Dark/Light mode)
-│   │   ├── pages\           # 10 core module views & User Management
-│   │   ├── services\        # Axios API client with JWT interceptor
-│   │   ├── App.jsx          # Route definitions & protected routes
-│   │   ├── main.jsx         # App bootstrap
-│   │   └── index.css        # Tailwind directives & print styles
-│   ├── index.html
-│   ├── tailwind.config.js
-│   ├── vite.config.js
-│   └── package.json
-├── server\                  # Backend Express REST API
-│   ├── prisma\
-│   │   ├── schema.prisma    # Complete relational database model
-│   │   └── seed.js          # Realistic data seed script
-│   ├── src\
-│   │   ├── config\          # Prisma client singleton
-│   │   ├── controllers\     # 10 module controllers
-│   │   ├── middleware\      # JWT auth, RBAC authorization, error handling
-│   │   ├── routes\          # Separated API routers
-│   │   ├── services\        # Business logic & database operations
-│   │   ├── app.js           # Express app configuration & middlewares
-│   │   └── server.js        # Server entrypoint
-│   ├── .env.example
-│   ├── .env
-│   └── package.json
-├── .env.example
-├── package.json
-└── README.md
-```
+| Method | Endpoint | Description | Access |
+|--------|----------|-------------|--------|
+| `POST` | `/api/auth/login` | Local JWT authenticate | Public |
+| `GET`  | `/api/auth/me` | Fetch active session profile | Authenticated |
+| `GET`  | `/api/dashboard/summary` | Retrieve KPI metrics | Authenticated |
+| `GET`  | `/api/dashboard/charts` | Sales & revenue timeseries | Authenticated |
+| `GET`  | `/api/inventory/products` | Paginated product search | Authenticated |
+| `POST` | `/api/inventory/products` | Add new stock SKU | Manager / Admin |
+| `POST` | `/api/sales` | Generate new POS invoice | Staff / Mgr / Admin |
+| `GET`  | `/api/customers` | Query customer ledgers | Authenticated |
+| `POST` | `/api/expenses` | Record operating expense | Authenticated |
+| `GET`  | `/api/smart/low-stock-prediction` | AI stockout forecast | Authenticated |
+
+---
+
+## 🔒 Security & Privacy
+
+- **Data Safety**: Local databases (`*.db`), `.env` secrets, and node dependencies are excluded via `.gitignore`.
+- **RBAC**: Protected routes both on the client (React Router DOM) and server (Express Middleware).
+- **Safe Soft Deletions**: Historical sales and purchase records are safeguarded; products with transactions are soft-archived rather than broken by cascade deletes.
+- **Firestore Security Rules**: Role-validated document read/write restrictions defined in [`firestore.rules`](firestore.rules).
+
+---
+
+## 👨‍💻 Author & Contributions
+
+- **Creator**: [Vinit Patil](https://github.com/vinitpatil14)
+- **Repository**: [vinitpatil14/Smart-Business-Management-System](https://github.com/vinitpatil14/Smart-Business-Management-System)
+
+Pull requests and feature suggestions are welcome! Feel free to star ⭐ the repository if this project helps your business or learning journey.
+
+---
+
+<div align="center">
+  <sub>Built with ❤️ using React 18, Node.js, Prisma ORM, and Firebase. Released under the MIT License.</sub>
+</div>

@@ -1,0 +1,164 @@
+<svg width="1200" height="420" viewBox="0 0 1200 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090D16" />
+      <stop offset="50%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#050811" />
+    </linearGradient>
+
+    <!-- Glowing Accent Gradients -->
+    <radialGradient id="purpleGlow" cx="20%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="cyanGlow" cx="80%" cy="70%" r="55%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.30" />
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Text Gradients -->
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="50%" stop-color="#A855F7" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.6" />
+    </linearGradient>
+
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.2" />
+    </linearGradient>
+  </defs>
+
+  <style>
+    .font-sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .title { font-weight: 900; letter-spacing: -0.04em; }
+    .subtitle { font-weight: 500; letter-spacing: -0.01em; fill: #94A3B8; }
+    .badge-text { font-size: 13px; font-weight: 700; fill: #E2E8F0; }
+  </style>
+
+  <!-- Background Base -->
+  <rect width="1200" height="420" rx="20" fill="url(#bgGrad)" />
+  <rect width="1200" height="420" rx="20" fill="url(#purpleGlow)" />
+  <rect width="1200" height="420" rx="20" fill="url(#cyanGlow)" />
+
+  <!-- Subtle Grid Pattern Overlay -->
+  <g opacity="0.08" stroke="#FFFFFF" stroke-width="1">
+    <path d="M0 60 H1200 M0 120 H1200 M0 180 H1200 M0 240 H1200 M0 300 H1200 M0 360 H1200" />
+    <path d="M120 0 V420 M240 0 V420 M360 0 V420 M480 0 V420 M600 0 V420 M720 0 V420 M840 0 V420 M960 0 V420 M1080 0 V420" />
+  </g>
+
+  <!-- Border Outline -->
+  <rect x="1" y="1" width="1198" height="418" rx="19" stroke="#334155" stroke-opacity="0.5" stroke-width="2" fill="none" />
+
+  <!-- Top Pill Tag -->
+  <g transform="translate(60, 48)">
+    <rect width="320" height="34" rx="17" fill="url(#badgeGrad)" stroke="#6366F1" stroke-opacity="0.5" stroke-width="1" />
+    <circle cx="20" cy="17" r="5" fill="#10B981" />
+    <text x="36" y="22" class="font-sans" font-size="12" font-weight="700" fill="#38BDF8" letter-spacing="0.08em">NEXT-GEN ENTERPRISE COMMERCE OS</text>
+  </g>
+
+  <!-- Main Hero Brand Title -->
+  <g transform="translate(60, 142)">
+    <!-- Logo Icon -->
+    <rect x="0" y="-38" width="56" height="56" rx="16" fill="url(#textGrad)" />
+    <!-- Pulse Line in Logo -->
+    <path d="M12 -10 H22 L27 -24 L33 4 L38 -10 H44" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Project Title -->
+    <text x="74" y="8" class="font-sans title" font-size="48" fill="#FFFFFF">
+      Nex<tspan fill="url(#textGrad)">Pulse</tspan> Business OS
+    </text>
+  </g>
+
+  <!-- Subtitle / Tagline -->
+  <text x="60" y="196" class="font-sans subtitle" font-size="20">
+    Smart Business Management System for Retailers, Distributors & Modern SMEs
+  </text>
+  <text x="60" y="226" class="font-sans" font-size="15" fill="#64748B" font-weight="500">
+    Point-of-Sale (POS) • Real-time Inventory • AI Predictive Restock • Multi-Tenant RBAC • Firebase Cloud
+  </text>
+
+  <!-- Interactive Feature Metric Cards on the Right -->
+  <g transform="translate(860, 50)">
+    <!-- Metric Card 1 -->
+    <rect width="280" height="90" rx="16" fill="url(#cardGrad)" stroke="#334155" stroke-width="1" />
+    <text x="24" y="34" class="font-sans" font-size="12" font-weight="600" fill="#94A3B8" letter-spacing="0.05em">ARCHITECTURE</text>
+    <text x="24" y="66" class="font-sans" font-size="18" font-weight="800" fill="#F8FAFC">Hybrid Cloud + Local</text>
+    <circle cx="240" cy="45" r="14" fill="#6366F1" fill-opacity="0.2" />
+    <path d="M236 45 L244 45 M240 41 L244 45 L240 49" stroke="#818CF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Metric Card 2 -->
+    <g transform="translate(0, 106)">
+      <rect width="280" height="90" rx="16" fill="url(#cardGrad)" stroke="#334155" stroke-width="1" />
+      <text x="24" y="34" class="font-sans" font-size="12" font-weight="600" fill="#94A3B8" letter-spacing="0.05em">DATA ISOLATION</text>
+      <text x="24" y="66" class="font-sans" font-size="18" font-weight="800" fill="#10B981">Zero-State Real Users</text>
+      <circle cx="240" cy="45" r="14" fill="#10B981" fill-opacity="0.2" />
+      <path d="M236 45 L239 48 L246 41" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+
+    <!-- Metric Card 3 -->
+    <g transform="translate(0, 212)">
+      <rect width="280" height="90" rx="16" fill="url(#cardGrad)" stroke="#334155" stroke-width="1" />
+      <text x="24" y="34" class="font-sans" font-size="12" font-weight="600" fill="#94A3B8" letter-spacing="0.05em">SMART TELEMETRY</text>
+      <text x="24" y="66" class="font-sans" font-size="18" font-weight="800" fill="#38BDF8">Recharts Analytics</text>
+      <circle cx="240" cy="45" r="14" fill="#0284C7" fill-opacity="0.2" />
+      <path d="M235 48 L239 42 L242 45 L246 39" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+  </g>
+
+  <!-- Tech Stack Badges at Bottom -->
+  <g transform="translate(60, 290)">
+    <!-- React -->
+    <g transform="translate(0, 0)">
+      <rect width="105" height="38" rx="10" fill="#1E293B" stroke="#38BDF8" stroke-width="1" stroke-opacity="0.4" />
+      <text x="52" y="24" class="font-sans badge-text" text-anchor="middle">React 18</text>
+    </g>
+
+    <!-- Vite -->
+    <g transform="translate(115, 0)">
+      <rect width="85" height="38" rx="10" fill="#1E293B" stroke="#A855F7" stroke-width="1" stroke-opacity="0.4" />
+      <text x="42" y="24" class="font-sans badge-text" text-anchor="middle">Vite</text>
+    </g>
+
+    <!-- Tailwind -->
+    <g transform="translate(210, 0)">
+      <rect width="115" height="38" rx="10" fill="#1E293B" stroke="#06B6D4" stroke-width="1" stroke-opacity="0.4" />
+      <text x="57" y="24" class="font-sans badge-text" text-anchor="middle">Tailwind CSS</text>
+    </g>
+
+    <!-- Node.js -->
+    <g transform="translate(335, 0)">
+      <rect width="100" height="38" rx="10" fill="#1E293B" stroke="#22C55E" stroke-width="1" stroke-opacity="0.4" />
+      <text x="50" y="24" class="font-sans badge-text" text-anchor="middle">Node.js</text>
+    </g>
+
+    <!-- Prisma -->
+    <g transform="translate(445, 0)">
+      <rect width="110" height="38" rx="10" fill="#1E293B" stroke="#6366F1" stroke-width="1" stroke-opacity="0.4" />
+      <text x="55" y="24" class="font-sans badge-text" text-anchor="middle">Prisma ORM</text>
+    </g>
+
+    <!-- Firebase -->
+    <g transform="translate(565, 0)">
+      <rect width="145" height="38" rx="10" fill="#1E293B" stroke="#F59E0B" stroke-width="1" stroke-opacity="0.4" />
+      <text x="72" y="24" class="font-sans badge-text" text-anchor="middle">Firebase &amp; Firestore</text>
+    </g>
+
+    <!-- Recharts -->
+    <g transform="translate(720, 0)">
+      <rect width="105" height="38" rx="10" fill="#1E293B" stroke="#EC4899" stroke-width="1" stroke-opacity="0.4" />
+      <text x="52" y="24" class="font-sans badge-text" text-anchor="middle">Recharts</text>
+    </g>
+  </g>
+
+  <!-- Bottom Brand Copyright Line -->
+  <text x="60" y="375" class="font-sans" font-size="12" fill="#475569" font-weight="500">
+    Crafted by Vinit Patil • MIT License • Production-grade Business Architecture
+  </text>
+</svg>
