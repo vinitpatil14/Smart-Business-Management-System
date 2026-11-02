@@ -176,7 +176,28 @@ class MockStore {
     const sKey = getStorageKey(key);
     const stored = localStorage.getItem(sKey);
     if (stored) {
-      try { return JSON.parse(stored); } catch { return defaultValue; }
+      try {
+        const parsed = JSON.parse(stored);
+        // If demo/sample mode is active, but array is empty due to prior clean zero initialization, auto-seed sample data!
+        if (isDemoActive() && Array.isArray(parsed) && parsed.length === 0) {
+          let init = defaultValue;
+          if (key === 'products') init = INITIAL_DEMO_PRODUCTS;
+          if (key === 'categories') init = INITIAL_DEMO_CATEGORIES;
+          if (key === 'customers') init = INITIAL_DEMO_CUSTOMERS;
+          if (key === 'suppliers') init = INITIAL_DEMO_SUPPLIERS;
+          if (key === 'purchases') init = INITIAL_DEMO_PURCHASES;
+          if (key === 'employees') init = INITIAL_DEMO_EMPLOYEES;
+          if (key === 'expenses') init = INITIAL_DEMO_EXPENSES;
+          if (key === 'sales') init = INITIAL_DEMO_SALES;
+          if (init && init !== defaultValue && init.length > 0) {
+            localStorage.setItem(sKey, JSON.stringify(init));
+            return init;
+          }
+        }
+        return parsed;
+      } catch {
+        return defaultValue;
+      }
     }
     // If demo mode, seed initial sample data
     if (isDemoActive()) {
@@ -295,7 +316,15 @@ class MockStore {
             { id: 4, name: 'Raw Himalayan Honey 500g', sku: 'SKU-HNY-04', category: 'Organic Grocery', unitsSold: 52, totalSales: 28600 }
           ],
           totalProductsCount: myProducts.length || 48,
-          totalCustomersCount: myCustomers.length || 18
+          totalCustomersCount: myCustomers.length || 18,
+          recentSales: mySales.slice(0, 5).map(s => ({
+            id: s.id,
+            invoiceNumber: s.invoiceNumber,
+            customerName: s.customer?.name || 'Walk-in Customer',
+            grandTotal: s.grandTotal,
+            paymentMethod: s.paymentMode || 'CASH',
+            createdAt: s.createdAt
+          }))
         }
       };
     }
