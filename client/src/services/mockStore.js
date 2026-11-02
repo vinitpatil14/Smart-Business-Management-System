@@ -12,15 +12,20 @@ const getStoredUser = () => {
   }
 };
 
-const isDemoActive = () => {
+const isZeroMode = () => {
   const u = getStoredUser();
-  return u?.isDemo === true || (u?.email && u.email.endsWith('@sbms.com'));
+  const uid = u?.id || u?.uid || 'guest';
+  return localStorage.getItem(`sbms_zero_mode_${uid}`) === 'true';
+};
+
+const isDemoActive = () => {
+  return !isZeroMode();
 };
 
 const getStorageKey = (key) => {
   const u = getStoredUser();
-  const prefix = isDemoActive() ? 'sbms_demo_' : `sbms_user_${u?.id || u?.uid || 'guest'}_`;
-  return prefix + key;
+  const uid = u?.id || u?.uid || 'guest';
+  return `sbms_user_${uid}_${key}`;
 };
 
 // Initial Seed Data for Demo Showroom
@@ -200,6 +205,36 @@ class MockStore {
     const url = (config.url || '').replace(/^https?:\/\/[^/]+/, '').replace(/^\/api/, '');
     const isDemo = isDemoActive();
 
+    // 0. STORE MODE SWITCHER
+    if (url === '/store/reset-zero') {
+      const u = getStoredUser();
+      const uid = u?.id || u?.uid || 'guest';
+      localStorage.setItem(`sbms_zero_mode_${uid}`, 'true');
+      this.setItem('products', []);
+      this.setItem('sales', []);
+      this.setItem('customers', []);
+      this.setItem('expenses', []);
+      this.setItem('purchases', []);
+      this.setItem('attendance_records', {});
+      return { success: true, message: 'Switched to clean zero workspace' };
+    }
+
+    if (url === '/store/reset-sample') {
+      const u = getStoredUser();
+      const uid = u?.id || u?.uid || 'guest';
+      localStorage.removeItem(`sbms_zero_mode_${uid}`);
+      this.setItem('products', INITIAL_DEMO_PRODUCTS);
+      this.setItem('categories', INITIAL_DEMO_CATEGORIES);
+      this.setItem('customers', INITIAL_DEMO_CUSTOMERS);
+      this.setItem('suppliers', INITIAL_DEMO_SUPPLIERS);
+      this.setItem('purchases', INITIAL_DEMO_PURCHASES);
+      this.setItem('employees', INITIAL_DEMO_EMPLOYEES);
+      this.setItem('expenses', INITIAL_DEMO_EXPENSES);
+      this.setItem('sales', INITIAL_DEMO_SALES);
+      this.setItem('attendance_records', {});
+      return { success: true, message: 'Sample showroom data loaded' };
+    }
+
     // 1. DASHBOARD SUMMARY & CHARTS
     if (url === '/dashboard/summary') {
       if (!isDemo) {
@@ -231,32 +266,36 @@ class MockStore {
         };
       }
 
-      // Demo Showroom Full Summary
+      // Showroom Full Summary
+      const myProducts = this.getItem('products', INITIAL_DEMO_PRODUCTS);
+      const mySales = this.getItem('sales', INITIAL_DEMO_SALES);
+      const myCustomers = this.getItem('customers', INITIAL_DEMO_CUSTOMERS);
+      const myExpenses = this.getItem('expenses', INITIAL_DEMO_EXPENSES);
+      const totalSalesAmt = mySales.reduce((sum, s) => sum + (s.grandTotal || 0), 0);
+      const totalExpAmt = myExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+
       return {
         success: true,
         data: {
           isDemo: true,
-          todaySalesAmount: 24500,
-          todaySalesCount: 14,
-          monthlyRevenue: 382400,
-          monthlySalesCount: 142,
-          monthlyExpenses: 42800,
-          estimatedProfit: 94600,
-          lowStockCount: 2,
-          lowStockList: [
-            { id: 5, name: 'Wireless Optical Barcode Scanner', sku: 'SKU-SCAN-05', stockQuantity: 8, reorderLevel: 10, category: { name: 'Electronics & POS' } },
-            { id: 2, name: 'Organic Green Tea Tin 250g', sku: 'SKU-TEA-02', stockQuantity: 14, reorderLevel: 15, category: { name: 'Beverages' } }
-          ],
-          pendingPaymentsTotal: 2100,
-          pendingCustomersCount: 2,
+          todaySalesAmount: mySales.slice(0, 3).reduce((sum, s) => sum + (s.grandTotal || 0), 0) || 24500,
+          todaySalesCount: mySales.length || 14,
+          monthlyRevenue: totalSalesAmt || 382400,
+          monthlySalesCount: mySales.length || 142,
+          monthlyExpenses: totalExpAmt || 42800,
+          estimatedProfit: (totalSalesAmt || 382400) - (totalExpAmt || 42800) - 245000 || 94600,
+          lowStockCount: myProducts.filter(p => p.stockQuantity <= p.reorderLevel).length || 2,
+          lowStockList: myProducts.filter(p => p.stockQuantity <= p.reorderLevel).slice(0, 5),
+          pendingPaymentsTotal: myCustomers.reduce((sum, c) => sum + (c.balance || 0), 0) || 2100,
+          pendingCustomersCount: myCustomers.filter(c => c.balance > 0).length || 2,
           topSellingProducts: [
             { id: 1, name: 'Premium Arabica Coffee Beans 1kg', sku: 'SKU-COF-01', category: 'Beverages', unitsSold: 142, totalSales: 127800 },
             { id: 2, name: 'Organic Green Tea Tin 250g', sku: 'SKU-TEA-02', category: 'Beverages', unitsSold: 98, totalSales: 44100 },
             { id: 3, name: 'Cold Pressed Virgin Coconut Oil 1L', sku: 'SKU-OIL-03', category: 'Organic Grocery', unitsSold: 64, totalSales: 38400 },
             { id: 4, name: 'Raw Himalayan Honey 500g', sku: 'SKU-HNY-04', category: 'Organic Grocery', unitsSold: 52, totalSales: 28600 }
           ],
-          totalProductsCount: 48,
-          totalCustomersCount: 18
+          totalProductsCount: myProducts.length || 48,
+          totalCustomersCount: myCustomers.length || 18
         }
       };
     }

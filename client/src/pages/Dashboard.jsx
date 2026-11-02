@@ -159,6 +159,26 @@ const Dashboard = () => {
     }
   };
 
+  const handleToggleWorkspaceMode = async (toZero) => {
+    try {
+      setRefreshing(true);
+      if (toZero) {
+        if (!window.confirm("Switch to Clean Zero State? All sample products and sales will be cleared so you can enter your real business data.")) {
+          setRefreshing(false);
+          return;
+        }
+        await api.post('/store/reset-zero');
+      } else {
+        await api.post('/store/reset-sample');
+      }
+      await fetchDashboardData();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   const fetchDashboardData = async () => {
     try {
       setRefreshing(true);
@@ -171,7 +191,8 @@ const Dashboard = () => {
       if (chartRes.data.success) setCharts(chartRes.data.data);
     } catch (err) {
       console.warn('Backend API unavailable, loading client data view:', err.message);
-      if (user?.isDemo || user?.email?.includes('@sbms.com')) {
+      const isZero = localStorage.getItem('sbms_zero_mode_' + (user?.uid || user?.id || 'guest')) === 'true';
+      if (!isZero) {
         setSummary(DEMO_FALLBACK_SUMMARY);
         setCharts(DEMO_FALLBACK_CHARTS);
       } else {
@@ -224,6 +245,26 @@ const Dashboard = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          {/* Mode Switcher: Sample Showroom vs Clean Zero Store */}
+          {summary?.isDemo ? (
+            <button
+              onClick={() => handleToggleWorkspaceMode(true)}
+              title="Reset sample data and start with a fresh clean 0 store for your real business"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 text-xs font-medium text-gray-700 dark:text-gray-300 transition"
+            >
+              <span>🌱 Switch to Clean Store</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => handleToggleWorkspaceMode(false)}
+              title="Load full sample products, sales and charts to test the system"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-300/80 dark:border-amber-700/60 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-xs font-semibold text-amber-800 dark:text-amber-300 transition"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+              <span>✨ Load Sample Showroom</span>
+            </button>
+          )}
+
           {/* Firestore Cloud Sync Button */}
           <button
             onClick={handleSyncToFirestore}
@@ -275,11 +316,18 @@ const Dashboard = () => {
             <div>
               <h4 className="text-sm font-bold text-gray-900 dark:text-white">Your Business Workspace is Fresh & Ready!</h4>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                All numbers start cleanly at zero. Add your first inventory product or create your first bill to see your metrics grow.
+                All numbers start cleanly at zero. You can add your own products or load sample catalog with 1 click to test.
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
+            <button
+              onClick={() => handleToggleWorkspaceMode(false)}
+              className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Load Sample Products</span>
+            </button>
             <button
               onClick={() => navigate('/inventory')}
               className="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm transition"
