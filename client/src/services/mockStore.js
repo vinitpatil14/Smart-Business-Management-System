@@ -12,20 +12,17 @@ const getStoredUser = () => {
   }
 };
 
-const isZeroMode = () => {
-  const u = getStoredUser();
-  const uid = u?.id || u?.uid || 'guest';
-  return localStorage.getItem(`sbms_zero_mode_${uid}`) === 'true';
-};
-
 const isDemoActive = () => {
-  return !isZeroMode();
+  const u = getStoredUser();
+  // Only demo users or explicit accounts ending with @sbms.com are demo accounts
+  // Real users (vinu@gmail.com, Google Login, or any personal email) are real users and start fresh from 0
+  return Boolean(u?.isDemo === true || (u?.email && u.email.endsWith('@sbms.com')));
 };
 
 const getStorageKey = (key) => {
   const u = getStoredUser();
-  const uid = u?.id || u?.uid || 'guest';
-  return `sbms_user_${uid}_${key}`;
+  const prefix = isDemoActive() ? 'sbms_demo_' : `sbms_user_${u?.id || u?.uid || 'guest'}_`;
+  return prefix + key;
 };
 
 // Initial Seed Data for Demo Showroom
@@ -178,20 +175,31 @@ class MockStore {
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        // If demo/sample mode is active, but array is empty due to prior clean zero initialization, auto-seed sample data!
-        if (isDemoActive() && Array.isArray(parsed) && parsed.length === 0) {
-          let init = defaultValue;
-          if (key === 'products') init = INITIAL_DEMO_PRODUCTS;
-          if (key === 'categories') init = INITIAL_DEMO_CATEGORIES;
-          if (key === 'customers') init = INITIAL_DEMO_CUSTOMERS;
-          if (key === 'suppliers') init = INITIAL_DEMO_SUPPLIERS;
-          if (key === 'purchases') init = INITIAL_DEMO_PURCHASES;
-          if (key === 'employees') init = INITIAL_DEMO_EMPLOYEES;
-          if (key === 'expenses') init = INITIAL_DEMO_EXPENSES;
-          if (key === 'sales') init = INITIAL_DEMO_SALES;
-          if (init && init !== defaultValue && init.length > 0) {
-            localStorage.setItem(sKey, JSON.stringify(init));
-            return init;
+        // If this is a real user (vinu@gmail.com, Google Login, etc.) and it has leftover demo seed products/sales, reset it to clean []
+        if (!isDemoActive() && Array.isArray(parsed) && parsed.length > 0) {
+          if (key === 'products' && parsed.some(p => p.sku === 'SKU-COF-01')) {
+            localStorage.setItem(sKey, JSON.stringify([]));
+            return [];
+          }
+          if (key === 'sales' && parsed.some(s => s.invoiceNumber === 'INV-2026-089')) {
+            localStorage.setItem(sKey, JSON.stringify([]));
+            return [];
+          }
+          if (key === 'expenses' && parsed.some(e => e.title === 'Store Monthly Electricity Bill')) {
+            localStorage.setItem(sKey, JSON.stringify([]));
+            return [];
+          }
+          if (key === 'categories' && parsed.some(c => c.name === 'Beverages' && c.description === 'Coffee, Tea & Natural Brews')) {
+            localStorage.setItem(sKey, JSON.stringify([]));
+            return [];
+          }
+          if (key === 'customers' && parsed.some(c => c.name === 'Rahul Sharma' && c.email === 'rahul.sharma@example.com')) {
+            localStorage.setItem(sKey, JSON.stringify([]));
+            return [];
+          }
+          if (key === 'employees' && parsed.some(e => e.email === 'vinit@sbms.com' && e.name === 'Vinit Patil')) {
+            localStorage.setItem(sKey, JSON.stringify([]));
+            return [];
           }
         }
         return parsed;
@@ -199,7 +207,7 @@ class MockStore {
         return defaultValue;
       }
     }
-    // If demo mode, seed initial sample data
+    // If demo mode active (only for demo users like admin@sbms.com), seed initial sample data
     if (isDemoActive()) {
       let init = defaultValue;
       if (key === 'products') init = INITIAL_DEMO_PRODUCTS;
@@ -213,6 +221,7 @@ class MockStore {
       localStorage.setItem(sKey, JSON.stringify(init));
       return init;
     }
+    // Real users start completely clean at 0
     return defaultValue;
   }
 
